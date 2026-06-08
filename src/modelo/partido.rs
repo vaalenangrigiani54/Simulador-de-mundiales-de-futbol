@@ -90,21 +90,22 @@ impl Partido {
     }
 
     fn resultados_avanzar_o_retroceder(&self, avanzar: bool) {
-        let cant_goles_local = self.goles_local.len();
-        let cant_goles_visitante = self.goles_visitante.len();
         let mut local = self.local.borrow_mut();
         let mut visitante = self.visitante.borrow_mut();
-
-        if cant_goles_local > cant_goles_visitante {
-            local.sumar_partido_ganado(avanzar);
-            visitante.sumar_partido_perdido(avanzar);
-        } else if cant_goles_local < cant_goles_visitante {
-            local.sumar_partido_perdido(avanzar);
-            visitante.sumar_partido_ganado(avanzar);
-        } else {
-            local.sumar_partido_empatado(avanzar);
-            visitante.sumar_partido_empatado(avanzar);
+        
+        match self.get_ganador_perdedor() {
+            Some((ganador, perdedor)) => {
+                ganador.borrow_mut().sumar_partido_ganado(avanzar);
+                perdedor.borrow_mut().sumar_partido_perdido(avanzar);
+            },
+            None => {
+                local.sumar_partido_empatado(avanzar);
+                visitante.sumar_partido_empatado(avanzar);
+            },
         }
+        
+        let cant_goles_local = self.goles_local.len();
+        let cant_goles_visitante = self.goles_visitante.len();
 
         local.sumar_goles_a_favor(cant_goles_local as u16, avanzar);
         local.sumar_goles_en_contra(cant_goles_visitante as u16, avanzar);
