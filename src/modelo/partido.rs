@@ -1,7 +1,7 @@
 use std::cell::{Ref, RefCell};
 use std::rc::Rc;
 
-use crate::{EquipoParticipante, Gol};
+use crate::{EquipoParticipante, EquipoParticipanteRef, Gol};
 
 /// Estructura de un partido de fútbol, con los equipos local y visitante y sus resultados.
 pub struct Partido {
@@ -48,6 +48,21 @@ impl Partido {
 
     pub fn get_visitante(&self) -> Ref<'_, EquipoParticipante> {
         self.visitante.borrow()
+    }
+
+    pub fn get_ganador_perdedor(&self) -> Option<(EquipoParticipanteRef, EquipoParticipanteRef)> {
+        let cant_goles_local = self.goles_local.len();
+        let cant_goles_visitante = self.goles_visitante.len();
+        let local = self.local.clone();
+        let visitante = self.visitante.clone();
+        
+        if cant_goles_local > cant_goles_visitante {
+            Some((local, visitante))
+        } else if cant_goles_local < cant_goles_visitante {
+            Some((visitante, local))
+        } else {
+            None
+        }
     }
 
     pub fn get_goles_local(&self) -> &Vec<Gol> {

@@ -1,11 +1,11 @@
-use crate::{Partido, Grupo};
+use crate::{FaseDeEliminacionDirecta, Grupo, Partido};
 
 pub struct Mundial {
     pub cantidad_participantes: u16,
     pub equipos_por_grupo: u16,
     pub grupos: Vec<Grupo>,
     pub partidos_fase_grupos: Vec<Partido>,
-    pub partidos_fase_eliminacion: Vec<Partido>
+    pub fases_eliminacion: Vec<FaseDeEliminacionDirecta>
 }
 
 
@@ -18,7 +18,7 @@ impl Mundial {
             equipos_por_grupo: equipos_por_grupo as u16,
             grupos,
             partidos_fase_grupos: Vec::new(),
-            partidos_fase_eliminacion: Vec::new()
+            fases_eliminacion: Vec::new()
         })
     }
 }
