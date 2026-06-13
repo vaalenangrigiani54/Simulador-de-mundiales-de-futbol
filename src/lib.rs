@@ -4,9 +4,10 @@ pub use modelo::equipo::Equipo;
 pub use modelo::equipo::EquipoParticipante;
 pub use modelo::equipo::EquipoParticipanteRef;
 
-pub use modelo::fase_eliminacion::{
-    FaseDeEliminacionDirecta,
-    TipoFaseEliminacion
+pub use modelo::fases::{
+    fase_grupos::FaseDeGrupos,
+    fase_eliminacion::FaseDeEliminacionDirecta,
+    tipo_fase_eliminacion::TipoFaseEliminacion
 };
 
 pub use modelo::gol::Gol;

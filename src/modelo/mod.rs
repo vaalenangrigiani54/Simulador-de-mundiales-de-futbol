@@ -1,5 +1,5 @@
 pub mod equipo;
-pub mod fase_eliminacion;
+pub mod fases;
 pub mod gol;
 pub mod grupo;
 pub mod mundial;

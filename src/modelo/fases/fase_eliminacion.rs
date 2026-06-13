@@ -1,13 +1,4 @@
-use crate::{EquipoParticipanteRef, Partido};
-
-pub enum TipoFaseEliminacion {
-    Dieciseisavos,
-    Octavos,
-    Cuartos,
-    Semifinales,
-    TercerPuesto,
-    Final,
-}
+use crate::{EquipoParticipanteRef, Partido, TipoFaseEliminacion};
 
 
 pub struct FaseDeEliminacionDirecta {
