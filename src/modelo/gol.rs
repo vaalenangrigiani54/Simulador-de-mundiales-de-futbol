@@ -1,4 +1,5 @@
-use crate::modelo::tiempos::TiempoDelPartido;
+use std::fmt::Display;
+use crate::TiempoDelPartido;
 
 pub type MinutoDelGol = u8;
 
@@ -33,8 +34,9 @@ impl Gol {
     }
 }
 
-impl ToString for Gol {
-    fn to_string(&self) -> String {
+
+impl Display for Gol {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut str = String::with_capacity(12);
         let offset = self.tiempo.offset();
         let limite = offset + self.tiempo.duracion();
@@ -50,7 +52,7 @@ impl ToString for Gol {
         if self.de_penal {
             str += " (P)"
         }
-
-        str
+        
+        write!(f, "{str}")
     }
 }
