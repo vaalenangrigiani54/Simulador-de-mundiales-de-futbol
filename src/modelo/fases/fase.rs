@@ -1,3 +1,12 @@
+use crate::Partido;
+
+pub trait Fase {
+    fn get_partido_actual(&self) -> &Partido;
+    fn siguiente_partido(&mut self) -> bool;
+    fn partido_anterior(&mut self) -> bool;
+}
+
+
 pub enum TipoFaseEliminacion {
     Dieciseisavos,
     Octavos,

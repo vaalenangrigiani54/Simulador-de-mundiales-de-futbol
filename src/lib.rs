@@ -7,7 +7,10 @@ pub use modelo::equipo::EquipoParticipanteRef;
 pub use modelo::fases::{
     fase_grupos::FaseDeGrupos,
     fase_eliminacion::FaseDeEliminacionDirecta,
-    tipo_fase_eliminacion::TipoFaseEliminacion
+    fase::{
+        Fase,
+        TipoFaseEliminacion
+    }
 };
 
 pub use modelo::gol::Gol;

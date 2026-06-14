@@ -13,6 +13,7 @@ pub struct Partido {
     amarillas_visitante: u16,
     rojas_local: u16,
     rojas_visitante: u16,
+    ya_simulado: bool
 }
 
 impl Partido {
@@ -29,10 +30,19 @@ impl Partido {
             amarillas_visitante: 0,
             rojas_local: 0,
             rojas_visitante: 0,
+            ya_simulado: false
         }
     }
 
-    pub fn simular(&mut self) {}
+    pub fn simular(&mut self) {
+        if self.ya_simulado {
+            return;
+        }
+    }
+
+    pub fn ya_fue_simulado(&self) -> bool {
+        self.ya_simulado
+    }
 
     pub fn avanzar_resultados_a_equipos(&self) {
         self.resultados_avanzar_o_retroceder(true);
