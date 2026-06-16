@@ -1,12 +1,11 @@
-use std::cell::{Ref, RefCell};
-use std::rc::Rc;
+use std::cell::Ref;
 
-use crate::{EquipoParticipante, EquipoParticipanteRef, Gol};
+use crate::{EquipoParticipante, EquipoParticipanteRef, Gol, SimuladorDePartidos};
 
 /// Estructura de un partido de fútbol, con los equipos local y visitante y sus resultados.
 pub struct Partido {
-    local: Rc<RefCell<EquipoParticipante>>,
-    visitante: Rc<RefCell<EquipoParticipante>>,
+    local: EquipoParticipanteRef,
+    visitante: EquipoParticipanteRef,
     goles_local: Vec<Gol>,
     goles_visitante: Vec<Gol>,
     amarillas_local: u16,
@@ -18,8 +17,8 @@ pub struct Partido {
 
 impl Partido {
     pub fn new(
-        local: Rc<RefCell<EquipoParticipante>>,
-        visitante: Rc<RefCell<EquipoParticipante>>,
+        local: EquipoParticipanteRef,
+        visitante: EquipoParticipanteRef,
     ) -> Self {
         Self {
             local,
@@ -38,10 +37,24 @@ impl Partido {
         if self.ya_simulado {
             return;
         }
-    }
 
-    pub fn ya_fue_simulado(&self) -> bool {
-        self.ya_simulado
+        let mut simulador = SimuladorDePartidos::inicializar();
+
+        // PRIMER Y SEGUNDO TIEMPO
+        for _ in 0..2 {
+            while simulador.siguiente_minuto() {
+                simulador.next_gol(&mut self.goles_local);
+                simulador.next_gol(&mut self.goles_visitante);
+                simulador.next_amarilla(&mut self.amarillas_local);
+                simulador.next_amarilla(&mut self.amarillas_visitante);
+                simulador.next_roja(&mut self.rojas_local);
+                simulador.next_roja(&mut self.rojas_visitante);
+            }
+
+            simulador.siguiente_tiempo();
+        }
+        
+        self.ya_simulado = true;
     }
 
     pub fn avanzar_resultados_a_equipos(&self) {

@@ -1,12 +1,10 @@
 use std::fmt::Display;
-use crate::TiempoDelPartido;
-
-pub type MinutoDelGol = u8;
+use crate::{MinutoDePartido, TiempoDelPartido};
 
 #[derive(PartialEq, Eq, PartialOrd, Ord)]
 pub struct Gol {
     tiempo: TiempoDelPartido,
-    minuto: MinutoDelGol,
+    minuto: MinutoDePartido,
     de_penal: bool,
 }
 
@@ -15,7 +13,7 @@ impl Gol {
     ///
     /// ## Importante:
     /// El minuto que se realizó en el gol es relativo al tiempo del partido.
-    pub fn normal(tiempo: TiempoDelPartido, minuto: MinutoDelGol) -> Self {
+    pub fn normal(tiempo: TiempoDelPartido, minuto: MinutoDePartido) -> Self {
         Self {
             tiempo,
             minuto,
@@ -25,7 +23,7 @@ impl Gol {
 
     /// ## Importante:
     /// El minuto que se realizó en el gol de penal es relativo al tiempo del partido.
-    pub fn de_penal(tiempo: TiempoDelPartido, minuto: MinutoDelGol) -> Self {
+    pub fn de_penal(tiempo: TiempoDelPartido, minuto: MinutoDePartido) -> Self {
         Self {
             tiempo,
             minuto,

@@ -19,5 +19,9 @@ pub use modelo::fases::{
 pub use modelo::partidos::{
     gol::Gol,
     partido::Partido,
-    tiempos::TiempoDelPartido
+    tiempos::{
+        MinutoDePartido,
+        TiempoDelPartido
+    },
+    simulador::SimuladorDePartidos,
 };
