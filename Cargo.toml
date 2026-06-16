@@ -1,7 +1,8 @@
 [package]
-name = "simulador-de-mundiales-de-futbol"
+name = "simulador-mundiales"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+eframe = "0.34.3"
 rand = "0.10"
