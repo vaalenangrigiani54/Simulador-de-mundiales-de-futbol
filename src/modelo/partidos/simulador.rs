@@ -1,16 +1,20 @@
-use rand::{RngExt, rngs::ThreadRng};
+use rand::{RngExt, rngs::StdRng};
 
 use crate::{Gol, MinutoDePartido, TiempoDelPartido};
 
-const PROBABILIDAD_GOL: f64 = 0.15;
-const PROBABILIDAD_GOL_PENAL: f64 = 0.25;
-const PROBABILIDAD_AMARILLA: f64 = 0.08;
-const PROBABILIDAD_ROJA: f64 = 0.01;
+const MAX_GOLES: u16 = 10;
+const MAX_AMARILLAS: u16 = 12;
+const MAX_ROJAS: u16 = 8;
+
+const PROBABILIDAD_GOL: f64 = 0.01;
+const PROBABILIDAD_GOL_PENAL: f64 = 0.1;
+const PROBABILIDAD_AMARILLA: f64 = 0.05;
+const PROBABILIDAD_ROJA: f64 = 0.005;
 
 
 /// Wrapper para generar partidos de manera un poco más realista.
 pub struct SimuladorDePartidos {
-    random: ThreadRng,
+    random: StdRng,
     tiempo_actual: TiempoDelPartido,
     minuto_actual: MinutoDePartido,
 }
@@ -19,14 +23,14 @@ pub struct SimuladorDePartidos {
 impl SimuladorDePartidos {
     pub fn inicializar() -> Self {
         Self {
-            random: rand::rng(),
+            random: rand::make_rng(),
             tiempo_actual: TiempoDelPartido::PrimerTiempo,
             minuto_actual: 0
         }
     }
 
     pub fn next_gol(&mut self, goles: &mut Vec<Gol>) {
-        if self.random.random_bool(PROBABILIDAD_GOL) {
+        if goles.len() as u16 <= MAX_GOLES && self.random.random_bool(PROBABILIDAD_GOL) {
             if self.random.random_bool(PROBABILIDAD_GOL_PENAL) {
                 goles.push(Gol::de_penal(self.tiempo_actual, self.minuto_actual));
             } else {
@@ -36,13 +40,13 @@ impl SimuladorDePartidos {
     }
 
     pub fn next_amarilla(&mut self, amarillas: &mut u16) {
-        if self.random.random_bool(PROBABILIDAD_AMARILLA) {
+        if *amarillas <= MAX_AMARILLAS && self.random.random_bool(PROBABILIDAD_AMARILLA) {
             *amarillas += 1;
         }
     }
 
     pub fn next_roja(&mut self, rojas: &mut u16) {
-        if self.random.random_bool(PROBABILIDAD_ROJA) {
+        if *rojas <= MAX_ROJAS && self.random.random_bool(PROBABILIDAD_ROJA) {
             *rojas += 1;
         }
     }

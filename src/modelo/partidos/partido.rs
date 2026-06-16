@@ -1,6 +1,6 @@
-use std::cell::Ref;
+use std::{cell::Ref, fmt::{Debug, Display}};
 
-use crate::{EquipoParticipante, EquipoParticipanteRef, Gol, SimuladorDePartidos};
+use crate::{EquipoParticipante, EquipoParticipanteRef, Gol, SimuladorDePartidos, modelo::equipo::IDEquipo};
 
 /// Estructura de un partido de fútbol, con los equipos local y visitante y sus resultados.
 pub struct Partido {
@@ -138,5 +138,59 @@ impl Partido {
         visitante.sumar_goles_en_contra(cant_goles_local as u16, avanzar);
         visitante.sumar_tarjetas_amarillas(self.amarillas_visitante, avanzar);
         visitante.sumar_tarjetas_rojas(self.rojas_visitante, avanzar);
+    }
+}
+
+
+impl Display for Partido {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{} vs. {}", self.get_local().get_nombre(), self.get_visitante().get_nombre())
+    }
+}
+
+
+impl Debug for Partido {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        writeln!(f, "{self}\n")?;
+
+        writeln!(f, "({}):", self.get_local().get_codigo())?;
+
+        write!(f, "{} goles: ", self.goles_local.len())?;
+        for gol in &self.goles_local {
+            write!(f, "[ {gol} ]")?;
+        }
+
+        writeln!(f, "\n{} tarjetas amarillas.", self.amarillas_local)?;
+        writeln!(f, "{} tarjetas rojas.", self.rojas_local)?;
+
+        writeln!(f, "\n({}):", self.get_visitante().get_codigo())?;
+
+        write!(f, "{} goles: ", self.goles_visitante.len())?;
+        for gol in &self.goles_visitante {
+            write!(f, "[ {gol} ]")?;
+        }
+
+        writeln!(f, "\n{} tarjetas amarillas.", self.amarillas_visitante)?;
+        writeln!(f, "{} tarjetas rojas.", self.rojas_visitante)
+    }
+}
+
+
+#[cfg(test)]
+mod test {
+    use std::{cell::RefCell, rc::Rc};
+
+    use crate::Equipo;
+    use super::*;
+
+    #[test]
+    fn test_simulacion() {
+        let equipo_loc = Rc::new(RefCell::new(Equipo::new("Argentina", "ARG").clasificarse()));
+        let equipo_vis = Rc::new(RefCell::new(Equipo::new("Francia", "FRA").clasificarse()));
+
+        let mut partido = Partido::new(equipo_loc, equipo_vis);
+        partido.simular();
+
+        println!("{:?}", partido);
     }
 }
