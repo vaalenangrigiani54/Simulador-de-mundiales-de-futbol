@@ -1,8 +1,6 @@
 pub mod equipo;
 pub mod fases;
-pub mod gol;
 pub mod grupo;
 pub mod mundial;
-pub mod partido;
+pub mod partidos;
 pub mod resultados;
-pub mod tiempos;
