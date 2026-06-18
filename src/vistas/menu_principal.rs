@@ -1,10 +1,18 @@
 use eframe::egui;
-use crate::{Mundial, Vista, VistaObj};
+use crate::{Mundial, Vista, VistaObj, app::FONDO_POR_DEFECTO};
 
 #[derive(Default)]
 pub struct VistaMenuPrincipal;
 
 impl Vista for VistaMenuPrincipal {
+    fn dimensiones(&self) -> egui::Vec2 {
+        return egui::Vec2 { x: 640.0, y: 480.0 };
+    }
+
+    fn color_de_fondo(&self) -> egui::Color32 {
+        return FONDO_POR_DEFECTO
+    }
+    
     fn actualizar(&mut self, ui: &mut egui::Ui, _modelo: &mut Option<Mundial>) -> Option<VistaObj> {
         let mut proxima_vista = None;
         

@@ -5,12 +5,18 @@ use crate::{Mundial, VistaMenuPrincipal};
 
 /// Todas las vistas deben implementar este trait para poder ser mostradas.
 pub trait Vista {
+    /// Devuelve el ancho y el alto (en píxeles) de la vista.
+    fn dimensiones(&self) -> egui::Vec2;
+
+    /// Devuelve el color de fondo de la ventana.
+    fn color_de_fondo(&self) -> egui::Color32;
+
     /// El valor de retorno es una decisión de si se va a cambiar de vista o no.
     fn actualizar(&mut self, ui: &mut egui::Ui, modelo: &mut Option<Mundial>) -> Option<VistaObj>;
 }
 
 
-/// Implementación del trait `Vista` como un objeto.
+/// Implementación de la vista como un objeto.
 pub struct VistaObj(Box<dyn Vista>);
 
 
