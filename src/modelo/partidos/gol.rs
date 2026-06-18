@@ -1,5 +1,5 @@
-use std::fmt::Display;
 use crate::{MinutoDePartido, TiempoDelPartido};
+use std::fmt::Display;
 
 #[derive(PartialEq, Eq, PartialOrd, Ord)]
 pub struct Gol {
@@ -32,7 +32,6 @@ impl Gol {
     }
 }
 
-
 impl Display for Gol {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut str = String::with_capacity(12);
@@ -50,7 +49,7 @@ impl Display for Gol {
         if self.de_penal {
             str += " (P)"
         }
-        
+
         write!(f, "{str}")
     }
 }

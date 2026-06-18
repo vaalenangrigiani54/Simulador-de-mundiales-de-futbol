@@ -5,9 +5,8 @@ pub struct Mundial {
     pub equipos_por_grupo: u16,
     pub grupos: Vec<Grupo>,
     pub fase_grupos: FaseDeGrupos,
-    pub fases_eliminacion: Vec<FaseDeEliminacionDirecta>
+    pub fases_eliminacion: Vec<FaseDeEliminacionDirecta>,
 }
-
 
 impl Mundial {
     pub fn new(grupos: Vec<Grupo>) -> Result<Self, String> {
@@ -19,7 +18,7 @@ impl Mundial {
             equipos_por_grupo: equipos_por_grupo as u16,
             grupos,
             fase_grupos,
-            fases_eliminacion: Vec::new()
+            fases_eliminacion: Vec::new(),
         })
     }
 }

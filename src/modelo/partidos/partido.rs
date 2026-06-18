@@ -1,6 +1,11 @@
-use std::{cell::Ref, fmt::{Debug, Display}};
+use std::{
+    cell::Ref,
+    fmt::{Debug, Display},
+};
 
-use crate::{EquipoParticipante, EquipoParticipanteRef, Gol, SimuladorDePartidos, modelo::equipo::IDEquipo};
+use crate::{
+    EquipoParticipante, EquipoParticipanteRef, Gol, SimuladorDePartidos, modelo::equipo::IDEquipo,
+};
 
 /// Estructura de un partido de fútbol, con los equipos local y visitante y sus resultados.
 pub struct Partido {
@@ -12,14 +17,11 @@ pub struct Partido {
     amarillas_visitante: u16,
     rojas_local: u16,
     rojas_visitante: u16,
-    ya_simulado: bool
+    ya_simulado: bool,
 }
 
 impl Partido {
-    pub fn new(
-        local: EquipoParticipanteRef,
-        visitante: EquipoParticipanteRef,
-    ) -> Self {
+    pub fn new(local: EquipoParticipanteRef, visitante: EquipoParticipanteRef) -> Self {
         Self {
             local,
             visitante,
@@ -29,7 +31,7 @@ impl Partido {
             amarillas_visitante: 0,
             rojas_local: 0,
             rojas_visitante: 0,
-            ya_simulado: false
+            ya_simulado: false,
         }
     }
 
@@ -53,7 +55,7 @@ impl Partido {
 
             simulador.siguiente_tiempo();
         }
-        
+
         self.ya_simulado = true;
     }
 
@@ -78,7 +80,7 @@ impl Partido {
         let cant_goles_visitante = self.goles_visitante.len();
         let local = self.local.clone();
         let visitante = self.visitante.clone();
-        
+
         if cant_goles_local > cant_goles_visitante {
             Some((local, visitante))
         } else if cant_goles_local < cant_goles_visitante {
@@ -115,18 +117,18 @@ impl Partido {
     fn resultados_avanzar_o_retroceder(&self, avanzar: bool) {
         let mut local = self.local.borrow_mut();
         let mut visitante = self.visitante.borrow_mut();
-        
+
         match self.get_ganador_perdedor() {
             Some((ganador, perdedor)) => {
                 ganador.borrow_mut().sumar_partido_ganado(avanzar);
                 perdedor.borrow_mut().sumar_partido_perdido(avanzar);
-            },
+            }
             None => {
                 local.sumar_partido_empatado(avanzar);
                 visitante.sumar_partido_empatado(avanzar);
-            },
+            }
         }
-        
+
         let cant_goles_local = self.goles_local.len();
         let cant_goles_visitante = self.goles_visitante.len();
 
@@ -141,13 +143,16 @@ impl Partido {
     }
 }
 
-
 impl Display for Partido {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{} vs. {}", self.get_local().get_nombre(), self.get_visitante().get_nombre())
+        write!(
+            f,
+            "{} vs. {}",
+            self.get_local().get_nombre(),
+            self.get_visitante().get_nombre()
+        )
     }
 }
-
 
 impl Debug for Partido {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -175,13 +180,12 @@ impl Debug for Partido {
     }
 }
 
-
 #[cfg(test)]
 mod test {
     use std::{cell::RefCell, rc::Rc};
 
-    use crate::Equipo;
     use super::*;
+    use crate::Equipo;
 
     #[test]
     fn test_simulacion() {

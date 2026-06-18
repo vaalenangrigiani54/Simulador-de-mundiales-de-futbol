@@ -1,7 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
+use crate::{MenuPrincipal, Mundial};
 use eframe::egui;
-use crate::{Mundial, VistaMenuPrincipal};
 
 /// Todas las vistas deben implementar este trait para poder ser mostradas.
 pub trait Vista {
@@ -15,10 +15,8 @@ pub trait Vista {
     fn actualizar(&mut self, ui: &mut egui::Ui, modelo: &mut Option<Mundial>) -> Option<VistaObj>;
 }
 
-
 /// Implementación de la vista como un objeto.
 pub struct VistaObj(Box<dyn Vista>);
-
 
 impl VistaObj {
     pub fn new<V: Vista + Default + 'static>() -> Self {
@@ -26,13 +24,11 @@ impl VistaObj {
     }
 }
 
-
 impl Default for VistaObj {
     fn default() -> Self {
-        Self::new::<VistaMenuPrincipal>()
+        Self::new::<MenuPrincipal>()
     }
 }
-
 
 impl Deref for VistaObj {
     type Target = dyn Vista;
@@ -41,7 +37,6 @@ impl Deref for VistaObj {
         &*self.0
     }
 }
-
 
 impl DerefMut for VistaObj {
     fn deref_mut(&mut self) -> &mut Self::Target {

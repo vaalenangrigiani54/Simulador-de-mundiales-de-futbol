@@ -6,15 +6,14 @@ pub struct FaseDeGrupos {
     partidos: Vec<Vec<Partido>>,
 
     /// (Grupo actual, Partido actual)
-    partido_actual: Option<(usize, usize)>
+    partido_actual: Option<(usize, usize)>,
 }
-
 
 impl FaseDeGrupos {
     pub fn new(grupos: &Vec<Grupo>) -> Self {
         Self {
             partidos: generar_partidos(grupos),
-            partido_actual: None
+            partido_actual: None,
         }
     }
 
@@ -22,7 +21,6 @@ impl FaseDeGrupos {
         self.partido_actual.unwrap_or_default()
     }
 }
-
 
 impl Fase for FaseDeGrupos {
     fn get_partido_actual(&self) -> &Partido {
@@ -79,7 +77,6 @@ impl Fase for FaseDeGrupos {
     }
 }
 
-
 fn generar_partidos(grupos: &Vec<Grupo>) -> Vec<Vec<Partido>> {
     let mut partidos = Vec::with_capacity(grupos.len());
 
@@ -91,11 +88,12 @@ fn generar_partidos(grupos: &Vec<Grupo>) -> Vec<Vec<Partido>> {
     partidos
 }
 
-
 /// Se utiliza el algoritmo de Berger para generar los partidos de manera ordenada y equilibrada.
 fn generar_partidos_un_grupo(grupo: &Grupo) -> Vec<Partido> {
-    let mut equipos: Vec<Option<EquipoParticipanteRef>> = grupo.get_equipos().iter().
-        map(|(_, equipo)| Some(equipo.clone()))
+    let mut equipos: Vec<Option<EquipoParticipanteRef>> = grupo
+        .get_equipos()
+        .iter()
+        .map(|(_, equipo)| Some(equipo.clone()))
         .collect();
 
     if equipos.len() & 1 == 1 {
@@ -112,10 +110,10 @@ fn generar_partidos_un_grupo(grupo: &Grupo) -> Vec<Partido> {
         // Partido del equipo fijo (Pivote en índice 0) contra el primero de la rotación
         let equipo_pivote = equipos[0].clone();
         let equipo_rival = equipos[rotacion[0]].clone();
-        
+
         // El pivote alterna localía estrictamente por ronda.
         let pivote_es_local = ronda & 1 == 0;
-        
+
         if let Some(partido) = crear_partido(equipo_pivote, equipo_rival, pivote_es_local) {
             fixture_grupo.push(partido);
         }
@@ -143,13 +141,12 @@ fn generar_partidos_un_grupo(grupo: &Grupo) -> Vec<Partido> {
     fixture_grupo
 }
 
-
 /// Esto se hace para lograr que la primera ronda sea secuencial (A vs B, C vs D...).
 fn crear_semilla_de_rotacion(n: usize) -> Vec<usize> {
     let mut rotacion = Vec::with_capacity(n - 1);
     let mut izq = 1;
     let mut der = n - 1;
-    
+
     while izq <= der {
         if izq == der {
             rotacion.push(izq);
@@ -165,13 +162,16 @@ fn crear_semilla_de_rotacion(n: usize) -> Vec<usize> {
     rotacion
 }
 
-
 /// Función auxiliar para crear un partido alternando las localías.
-fn crear_partido(equipo_a: Option<EquipoParticipanteRef>, equipo_b: Option<EquipoParticipanteRef>, a_es_local: bool) -> Option<Partido> {
+fn crear_partido(
+    equipo_a: Option<EquipoParticipanteRef>,
+    equipo_b: Option<EquipoParticipanteRef>,
+    a_es_local: bool,
+) -> Option<Partido> {
     let (Some(equipo_a), Some(equipo_b)) = (equipo_a, equipo_b) else {
-        return None; 
+        return None;
     };
-    
+
     // Fórmula de paridad: distribuye las localías dinámicamente.
     if a_es_local {
         Some(Partido::new(equipo_a, equipo_b))
@@ -180,13 +180,12 @@ fn crear_partido(equipo_a: Option<EquipoParticipanteRef>, equipo_b: Option<Equip
     }
 }
 
-
 #[cfg(test)]
 mod test {
     use std::{cell::RefCell, rc::Rc};
 
-    use crate::{Equipo, modelo::equipo::IDEquipo};
     use super::*;
+    use crate::{Equipo, modelo::equipo::IDEquipo};
 
     #[test]
     fn test_algoritmo_berger_4_equipos() {
@@ -198,7 +197,7 @@ mod test {
         let barcelona = Equipo::new("F.C. Barcelona", cod_barcelona).clasificarse();
         let bayern = Equipo::new("Bayern Munich", cod_bayern).clasificarse();
         let psg = Equipo::new("París Saint Germain", cod_psg).clasificarse();
-    
+
         let equipos = vec![
             Rc::new(RefCell::new(madrid)),
             Rc::new(RefCell::new(barcelona)),
@@ -217,18 +216,34 @@ mod test {
 
         let grupo = Grupo::try_new(1, equipos).expect("No se pudo crear el grupo");
         let partidos = generar_partidos_un_grupo(&grupo);
-        
+
         let cant_partidos_esperada = orden_esperado.len();
-        assert_eq!(partidos.len(), cant_partidos_esperada, "La cantidad de partidos generados debe ser {cant_partidos_esperada}");
+        assert_eq!(
+            partidos.len(),
+            cant_partidos_esperada,
+            "La cantidad de partidos generados debe ser {cant_partidos_esperada}"
+        );
 
         for i in 0..cant_partidos_esperada {
-            let (cod_loc_esperado, cod_vis_esperado) = orden_esperado.get(i).expect("Error al obtener los equipos enfrentados");
-            let partido = partidos.get(i).expect("Error al obtener el partido generado");
+            let (cod_loc_esperado, cod_vis_esperado) = orden_esperado
+                .get(i)
+                .expect("Error al obtener los equipos enfrentados");
+            let partido = partidos
+                .get(i)
+                .expect("Error al obtener el partido generado");
             let loc_actual = partido.get_local();
             let vis_actual = partido.get_visitante();
 
-            assert_eq!(loc_actual.get_codigo(), *cod_loc_esperado, "El equipo local de este partido debe ser '{cod_loc_esperado}'");
-            assert_eq!(vis_actual.get_codigo(), *cod_vis_esperado, "El equipo visitante de este partido debe ser '{cod_vis_esperado}'");
+            assert_eq!(
+                loc_actual.get_codigo(),
+                *cod_loc_esperado,
+                "El equipo local de este partido debe ser '{cod_loc_esperado}'"
+            );
+            assert_eq!(
+                vis_actual.get_codigo(),
+                *cod_vis_esperado,
+                "El equipo visitante de este partido debe ser '{cod_vis_esperado}'"
+            );
         }
     }
 }

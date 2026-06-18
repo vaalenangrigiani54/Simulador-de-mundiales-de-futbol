@@ -11,7 +11,6 @@ const PROBABILIDAD_GOL_PENAL: f64 = 0.1;
 const PROBABILIDAD_AMARILLA: f64 = 0.05;
 const PROBABILIDAD_ROJA: f64 = 0.005;
 
-
 /// Wrapper para generar partidos de manera un poco más realista.
 pub struct SimuladorDePartidos {
     random: StdRng,
@@ -19,13 +18,12 @@ pub struct SimuladorDePartidos {
     minuto_actual: MinutoDePartido,
 }
 
-
 impl SimuladorDePartidos {
     pub fn inicializar() -> Self {
         Self {
             random: rand::make_rng(),
             tiempo_actual: TiempoDelPartido::PrimerTiempo,
-            minuto_actual: 0
+            minuto_actual: 0,
         }
     }
 

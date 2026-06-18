@@ -2,9 +2,8 @@ use crate::EquipoParticipanteRef;
 
 pub struct Grupo {
     id: usize,
-    equipos: Vec<(usize, EquipoParticipanteRef)>
+    equipos: Vec<(usize, EquipoParticipanteRef)>,
 }
-
 
 impl Grupo {
     pub fn try_new(id: usize, equipos: Vec<EquipoParticipanteRef>) -> Result<Self, String> {
@@ -20,10 +19,10 @@ impl Grupo {
             equipos_bombo.push((bombo, equipo));
             bombo += 1;
         }
-        
+
         Ok(Self {
             id,
-            equipos: equipos_bombo
+            equipos: equipos_bombo,
         })
     }
 

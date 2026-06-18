@@ -1,19 +1,17 @@
 use crate::{EquipoParticipanteRef, Fase, Partido, TipoFaseEliminacion};
 
-
 pub struct FaseDeEliminacionDirecta {
     pub tipo: TipoFaseEliminacion,
     partidos: Vec<Partido>,
     partido_actual: Option<usize>,
 }
 
-
 impl FaseDeEliminacionDirecta {
     pub fn new(tipo: TipoFaseEliminacion, equipos: Vec<EquipoParticipanteRef>) -> Self {
         Self {
             tipo,
             partidos: generar_partidos(equipos),
-            partido_actual: None
+            partido_actual: None,
         }
     }
 
@@ -21,7 +19,6 @@ impl FaseDeEliminacionDirecta {
         self.partido_actual.unwrap_or_default()
     }
 }
-
 
 impl Fase for FaseDeEliminacionDirecta {
     fn get_partido_actual(&self) -> &Partido {
@@ -63,14 +60,13 @@ impl Fase for FaseDeEliminacionDirecta {
     }
 }
 
-
 fn generar_partidos(equipos: Vec<EquipoParticipanteRef>) -> Vec<Partido> {
     let mut partidos = Vec::new();
 
-    for i in 0..equipos.len()-1 {
+    for i in 0..equipos.len() - 1 {
         let local = equipos[i].clone();
         let visitante = equipos[i + 1].clone();
-        
+
         partidos.push(Partido::new(local, visitante));
     }
 

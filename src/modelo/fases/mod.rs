@@ -1,3 +1,3 @@
-pub mod fase_grupos;
-pub mod fase_eliminacion;
 pub mod fase;
+pub mod fase_eliminacion;
+pub mod fase_grupos;

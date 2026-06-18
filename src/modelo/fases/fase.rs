@@ -6,7 +6,6 @@ pub trait Fase {
     fn partido_anterior(&mut self) -> bool;
 }
 
-
 pub enum TipoFaseEliminacion {
     Dieciseisavos,
     Octavos,
@@ -16,7 +15,6 @@ pub enum TipoFaseEliminacion {
     Final,
 }
 
-
 impl TipoFaseEliminacion {
     pub fn siguiente(&self) -> Option<Self> {
         match self {
@@ -25,7 +23,7 @@ impl TipoFaseEliminacion {
             Self::Cuartos => Some(Self::Semifinales),
             Self::Semifinales => Some(Self::TercerPuesto),
             Self::TercerPuesto => Some(Self::Final),
-            Self::Final => None
+            Self::Final => None,
         }
     }
 
@@ -36,7 +34,7 @@ impl TipoFaseEliminacion {
             Self::Cuartos => Some(Self::Octavos),
             Self::Semifinales => Some(Self::Cuartos),
             Self::TercerPuesto => Some(Self::Semifinales),
-            Self::Final => Some(Self::TercerPuesto)
+            Self::Final => Some(Self::TercerPuesto),
         }
     }
 }
