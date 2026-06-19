@@ -1,35 +1,38 @@
-use crate::config::FONDO_POR_DEFECTO;
-use crate::{Mundial, Vista, VistaObj};
+use crate::{EventoMenuPrincipal, MenuPrincipal, Ventana};
 use eframe::egui;
 
-#[derive(Default)]
-pub struct MenuPrincipal;
+impl Ventana for MenuPrincipal {
+    type Evento = EventoMenuPrincipal;
 
-impl Vista for MenuPrincipal {
-    fn dimensiones(&self) -> egui::Vec2 {
-        return egui::Vec2 { x: 640.0, y: 480.0 };
-    }
+    fn renderizar(ui: &mut egui::Ui) -> Option<Self::Evento> {
+        let mut proximo_evento = None;
 
-    fn color_de_fondo(&self) -> egui::Color32 {
-        return FONDO_POR_DEFECTO;
-    }
-
-    fn actualizar(&mut self, ui: &mut egui::Ui, _modelo: &mut Option<Mundial>) -> Option<VistaObj> {
-        let mut proxima_vista = None;
-
-        ui.heading("Información del Sistema");
+        render_titulo(ui);
         ui.add_space(10.0);
 
-        ui.label("Esta es una pantalla secundaria muy sencilla.");
-        ui.label("Versión de la aplicación: 1.0.0");
-        ui.label("Desarrollado con Rust y egui.");
-
+        render_descripcion(ui);
         ui.add_space(15.0);
 
-        if ui.button("Entendido").clicked() {
-            // proxima_vista = Some(VistaObj::new::<???>());
-        }
+        render_boton_salir(ui, &mut proximo_evento);
 
-        proxima_vista
+        proximo_evento
+    }
+}
+
+fn render_titulo(ui: &mut egui::Ui) {
+    ui.heading("Información del Sistema");
+}
+
+fn render_descripcion(ui: &mut egui::Ui) {
+    ui.label("Esta es una pantalla secundaria muy sencilla.");
+    ui.label("Versión de la aplicación: 1.0.0");
+    ui.label("Desarrollado con Rust y egui.");
+}
+
+fn render_boton_salir(ui: &mut egui::Ui, proximo_evento: &mut Option<EventoMenuPrincipal>) {
+    let boton = ui.button("Salir");
+
+    if boton.clicked() && proximo_evento.is_none() {
+        *proximo_evento = Some(EventoMenuPrincipal::Salir)
     }
 }

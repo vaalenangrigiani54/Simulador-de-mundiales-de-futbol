@@ -1,10 +1,14 @@
 pub mod app;
 pub mod config;
+pub mod controladores;
+pub mod eventos;
 pub mod modelo;
 pub mod mvc;
 pub mod vistas;
 
-pub use mvc::{Vista, VistaObj};
+pub use eventos::{EventoGlobal, EventoMenuPrincipal};
+
+pub use mvc::{Controlador, ControladorObj, Ventana, VentanaInfo};
 
 pub use modelo::{
     equipo::{Equipo, EquipoParticipante, EquipoParticipanteRef},
@@ -24,4 +28,4 @@ pub use modelo::{
     resultados::ResultadoEquipo,
 };
 
-pub use vistas::menu_principal::MenuPrincipal;
+pub use vistas::ventanas::MenuPrincipal;
