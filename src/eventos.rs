@@ -19,5 +19,5 @@ pub enum EventoMenuPrincipal {
 pub enum EventoMuestraClasificados {
     IrAInicioDelMundial,
     IrAFormacionDeGrupos,
-    IrASeleccionarEquiposClasificados
+    IrASeleccionarEquiposClasificados,
 }

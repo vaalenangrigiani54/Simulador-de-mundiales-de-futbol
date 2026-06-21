@@ -1,9 +1,9 @@
-use eframe::egui::{self, Color32, Vec2};
 use crate::eventos::EventoMenuPrincipal;
 use crate::templates::boton::*;
 use crate::templates::texto::crear_texto;
 use crate::ventanas::MenuPrincipal;
 use crate::{ModeloSimulador, Ventana};
+use eframe::egui::{self, Color32, Vec2};
 
 impl Ventana for MenuPrincipal {
     type Evento = EventoMenuPrincipal;

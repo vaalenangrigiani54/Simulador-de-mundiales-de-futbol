@@ -1,6 +1,5 @@
-use std::{cmp::Ordering, fmt::Display};
 use crate::{Equipo, EquipoInfo, ResultadoEquipo};
-
+use std::{cmp::Ordering, fmt::Display};
 
 /// Simula el equipo que va a participar en el mundial simulado.
 ///

@@ -1,9 +1,7 @@
-use eframe::egui;
 use crate::eventos::{EventoGlobal, EventoMuestraClasificados};
 use crate::ventanas::MuestraClasificados;
-use crate::{
-    Controlador, ModeloSimulador, Ventana,
-};
+use crate::{Controlador, ModeloSimulador, Ventana};
+use eframe::egui;
 
 impl Controlador for MuestraClasificados {
     fn actualizar(&mut self, ui: &mut egui::Ui, modelo: &mut ModeloSimulador) -> EventoGlobal {

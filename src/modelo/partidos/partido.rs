@@ -3,9 +3,7 @@ use std::{
     fmt::{Debug, Display},
 };
 
-use crate::{
-    EquipoParticipante, EquipoParticipanteRef, Gol, SimuladorDePartidos, EquipoInfo,
-};
+use crate::{EquipoInfo, EquipoParticipante, EquipoParticipanteRef, Gol, SimuladorDePartidos};
 
 /// Estructura de un partido de fútbol, con los equipos local y visitante y sus resultados.
 pub struct Partido {

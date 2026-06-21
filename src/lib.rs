@@ -13,10 +13,7 @@ pub use modelo::{
     equipo::{
         equipo_participante::EquipoParticipante,
         equipo_participante_ref::EquipoParticipanteRef,
-        info_equipo::{
-            Equipo,
-            EquipoInfo
-        }
+        info_equipo::{Equipo, EquipoInfo},
     },
     fases::{
         fase::{Fase, TipoFaseEliminacion},
@@ -35,7 +32,4 @@ pub use modelo::{
     resultados::ResultadoEquipo,
 };
 
-pub use vistas::ventanas::{
-    self,
-    VentanaInfo
-};
+pub use vistas::ventanas::{self, VentanaInfo};

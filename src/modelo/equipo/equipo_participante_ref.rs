@@ -1,14 +1,10 @@
 use std::{
     cell::RefCell,
-    ops::{
-        Deref,
-        DerefMut
-    },
-    rc::Rc
+    ops::{Deref, DerefMut},
+    rc::Rc,
 };
 
 use crate::{Equipo, EquipoParticipante};
-
 
 /// Múltiples referencias mutables a un equipo participante.
 #[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]

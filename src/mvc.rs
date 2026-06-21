@@ -1,15 +1,15 @@
-use eframe::egui::Ui;
-use std::ops::{Deref, DerefMut};
 use crate::eventos::EventoGlobal;
 use crate::ventanas::MenuPrincipal;
 use crate::{ModeloSimulador, VentanaInfo};
+use eframe::egui::Ui;
+use std::ops::{Deref, DerefMut};
 
 /// Todas las vistas deben implementar este trait para poder ser mostradas.
 pub trait Ventana: VentanaInfo {
     type Evento;
 
     /// Dibuja los componentes y devuelve una posible acción a ejecutarse (evento).
-    /// 
+    ///
     /// Se puede pasar el estado global para renderizar cosas de manera dinámica.
     fn renderizar(&self, ui: &mut Ui, global: &ModeloSimulador) -> Option<Self::Evento>;
 }

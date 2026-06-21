@@ -1,8 +1,8 @@
-use std::any::TypeId;
-use eframe::egui::{CentralPanel, Context, Frame, Pos2, Ui, Vec2, ViewportCommand};
 use crate::eventos::EventoGlobal;
 use crate::ventanas::{MenuPrincipal, MuestraClasificados};
 use crate::{ControladorObj, ModeloSimulador};
+use eframe::egui::{CentralPanel, Context, Frame, Pos2, Ui, Vec2, ViewportCommand};
+use std::any::TypeId;
 
 #[derive(Default)]
 pub struct AppSimulador {
