@@ -1,23 +1,7 @@
-use crate::config::{FONDO_POR_DEFECTO, MARGEN_EXTERIOR_POR_DEFECTO};
-use crate::{EventoGlobal, MenuPrincipal, ModeloSimulador};
-use eframe::egui::{Color32, Ui, Vec2};
+use eframe::egui::Ui;
 use std::ops::{Deref, DerefMut};
-
-/// Información de ventana que es segura para usar a través de trait-objects.
-pub trait VentanaInfo {
-    /// Ancho y Alto de la ventana (en píxeles).
-    fn dimensiones(&self) -> Vec2;
-
-    /// Color de fondo de la ventana.
-    fn color_de_fondo(&self) -> Color32 {
-        FONDO_POR_DEFECTO
-    }
-
-    /// Margen exterior de la ventana sin contar las dimensiones (Padding inverso).
-    fn margen_exterior(&self) -> f32 {
-        MARGEN_EXTERIOR_POR_DEFECTO
-    }
-}
+use crate::{EventoGlobal, ModeloSimulador, VentanaInfo};
+use crate::ventanas::MenuPrincipal;
 
 /// Todas las vistas deben implementar este trait para poder ser mostradas.
 pub trait Ventana: VentanaInfo {

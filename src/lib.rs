@@ -9,7 +9,7 @@ pub mod vistas;
 
 pub use eventos::{EventoGlobal, EventoMenuPrincipal};
 
-pub use mvc::{Controlador, ControladorObj, Ventana, VentanaInfo};
+pub use mvc::{Controlador, ControladorObj, Ventana};
 
 pub use modelo::{
     equipo::{Equipo, EquipoParticipante, EquipoParticipanteRef},
@@ -30,4 +30,7 @@ pub use modelo::{
     resultados::ResultadoEquipo,
 };
 
-pub use vistas::ventanas::MenuPrincipal;
+pub use vistas::ventanas::{
+    self,
+    VentanaInfo
+};

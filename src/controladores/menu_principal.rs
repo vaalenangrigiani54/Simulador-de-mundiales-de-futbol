@@ -1,5 +1,6 @@
+use crate::ventanas::MenuPrincipal;
 use crate::{
-    Controlador, EventoGlobal, EventoMenuPrincipal, MenuPrincipal, ModeloSimulador, Ventana,
+    Controlador, EventoGlobal, EventoMenuPrincipal, ModeloSimulador, Ventana,
 };
 use eframe::egui;
 

@@ -1,6 +1,6 @@
 use std::any::TypeId;
-
-use crate::{ControladorObj, EventoGlobal, MenuPrincipal, ModeloSimulador};
+use crate::{ControladorObj, EventoGlobal, ModeloSimulador};
+use crate::ventanas::MenuPrincipal;
 use eframe::egui::{CentralPanel, Context, Frame, Pos2, Ui, Vec2, ViewportCommand};
 
 #[derive(Default)]

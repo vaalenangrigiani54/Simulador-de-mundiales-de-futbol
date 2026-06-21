@@ -1,6 +1,7 @@
 use crate::templates::boton::*;
 use crate::templates::texto::crear_texto;
-use crate::{EventoMenuPrincipal, MenuPrincipal, Ventana};
+use crate::ventanas::MenuPrincipal;
+use crate::{EventoMenuPrincipal, Ventana};
 use eframe::egui::{self, Color32, Vec2};
 
 impl Ventana for MenuPrincipal {
