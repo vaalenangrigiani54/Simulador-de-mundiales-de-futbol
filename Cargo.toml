@@ -5,4 +5,5 @@ edition = "2024"
 
 [dependencies]
 eframe = "0.34.3"
+egui_extras = { version = "0.34.3", features = ["default"] }
 rand = "0.10"

@@ -1,6 +1,9 @@
 use crate::templates::texto::crear_texto;
 use eframe::egui::{self, Button, Color32, RichText, Vec2};
 
+/// Altura por defecto (en píxeles) de un botón.
+pub const ALTURA_BOTON_PREDETERMINADA: f32 = 30.0;
+
 /// Plantilla de configuración personalizada para el botón.
 pub struct PropiedadesBoton {
     pub texto: RichText,
@@ -27,7 +30,10 @@ pub fn agregar_boton_atras(ui: &mut egui::Ui, on_click: impl FnOnce()) {
 
     let cfg = PropiedadesBoton {
         texto,
-        dimensiones: Vec2 { x: 220.0, y: 30.0 },
+        dimensiones: Vec2 {
+            x: 220.0,
+            y: ALTURA_BOTON_PREDETERMINADA,
+        },
         fondo_rgb: (255, 200, 200),
     };
 
@@ -40,7 +46,10 @@ pub fn agregar_boton_siguiente(ui: &mut egui::Ui, on_click: impl FnOnce()) {
 
     let cfg = PropiedadesBoton {
         texto,
-        dimensiones: Vec2 { x: 220.0, y: 30.0 },
+        dimensiones: Vec2 {
+            x: 220.0,
+            y: ALTURA_BOTON_PREDETERMINADA,
+        },
         fondo_rgb: (200, 255, 200),
     };
 
