@@ -23,12 +23,7 @@ impl Ventana for MenuPrincipal {
 }
 
 fn render_titulo(ui: &mut egui::Ui) {
-    let texto = crear_texto(
-        "SIMULADOR DE MUNDIALES", 
-        50.0, 
-        Color32::BLACK, 
-        true
-    );
+    let texto = crear_texto("SIMULADOR DE MUNDIALES", 50.0, Color32::BLACK, true);
 
     ui.vertical_centered(|ui| ui.heading(texto));
 }

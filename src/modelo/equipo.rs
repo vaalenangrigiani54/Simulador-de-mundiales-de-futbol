@@ -11,7 +11,7 @@ pub trait IDEquipo {
 }
 
 /// Información general de una selección de fútbol.
-#[derive(PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Equipo {
     nombre: String,
     codigo: String,
@@ -44,6 +44,9 @@ pub struct EquipoParticipante {
     pub posicion: ResultadoEquipo,
 }
 
+/// Múltiples referencias mutables a un equipo participante.
+pub type EquipoParticipanteRef = Rc<RefCell<EquipoParticipante>>;
+
 impl Equipo {
     pub fn new(nombre: impl Into<String>, codigo: impl Into<String>) -> Self {
         Equipo {
@@ -74,8 +77,20 @@ impl Equipo {
 }
 
 impl EquipoParticipante {
-    pub fn descalificarse(self) -> Equipo {
-        self.id
+    /// Crea el equipo clasificado a partir de `id`, el cual se clona.
+    pub fn new(id: &Equipo) -> Self {
+        Self {
+            id: id.clone(),
+            puntos: 0,
+            goles_a_favor: 0,
+            goles_en_contra: 0,
+            ganados: 0,
+            empatados: 0,
+            perdidos: 0,
+            amarillas: 0,
+            rojas: 0,
+            posicion: ResultadoEquipo::FaseDeGrupos,
+        }
     }
 
     pub fn get_puntos(&self) -> u16 {
@@ -263,6 +278,3 @@ impl PartialOrd for EquipoParticipante {
         Some(self.cmp(other))
     }
 }
-
-/// Múltiples referencias mutables a un equipo participante.
-pub type EquipoParticipanteRef = Rc<RefCell<EquipoParticipante>>;

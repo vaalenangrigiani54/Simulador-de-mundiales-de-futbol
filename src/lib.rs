@@ -18,8 +18,8 @@ pub use modelo::{
         fase_eliminacion::FaseDeEliminacionDirecta,
         fase_grupos::FaseDeGrupos,
     },
+    global::ModeloSimulador,
     grupo::Grupo,
-    modelo::ModeloSimulador,
     mundial::Mundial,
     partidos::{
         gol::Gol,
