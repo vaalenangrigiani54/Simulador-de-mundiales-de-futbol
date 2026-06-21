@@ -1,4 +1,4 @@
-use crate::{Equipo, Mundial};
+use crate::{Equipo, EquipoParticipanteRef, Grupo, Mundial};
 
 /// Estructura principal del modelo global.
 pub struct ModeloSimulador {
@@ -7,6 +7,12 @@ pub struct ModeloSimulador {
 
     /// Cantidad de participantes en el torneo.
     pub cant_participantes: usize,
+
+    /// Campo auxiliar para los equipos clasificados.
+    pub clasificados: Option<Vec<EquipoParticipanteRef>>,
+
+    /// Campo auxiliar para los grupos.
+    pub grupos: Option<Vec<Grupo>>,
 
     /// Modelo del mundial. Si no está creado es None.
     pub mundial: Option<Mundial>,
@@ -17,6 +23,8 @@ impl Default for ModeloSimulador {
         Self {
             afiliados_fifa: inicializar_afiliados_fifa(),
             cant_participantes: 16,
+            clasificados: None,
+            grupos: None,
             mundial: None,
         }
     }
@@ -24,7 +32,7 @@ impl Default for ModeloSimulador {
 
 impl ModeloSimulador {
     /// Devuelve todos los equipos afiliados a la FIFA.
-    pub fn equipos_disponibles(&self) -> &Vec<Equipo> {
+    pub fn get_equipos_disponibles(&self) -> &Vec<Equipo> {
         return &self.afiliados_fifa;
     }
 }

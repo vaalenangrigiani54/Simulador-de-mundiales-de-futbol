@@ -1,16 +1,19 @@
+use eframe::egui::{self, Color32, Vec2};
+use crate::eventos::EventoMenuPrincipal;
 use crate::templates::boton::*;
 use crate::templates::texto::crear_texto;
 use crate::ventanas::MenuPrincipal;
-use crate::{EventoMenuPrincipal, Ventana};
-use eframe::egui::{self, Color32, Vec2};
+use crate::{ModeloSimulador, Ventana};
 
 impl Ventana for MenuPrincipal {
     type Evento = EventoMenuPrincipal;
 
-    fn renderizar(&self, ui: &mut egui::Ui) -> Option<Self::Evento> {
+    fn renderizar(&self, ui: &mut egui::Ui, _global: &ModeloSimulador) -> Option<Self::Evento> {
         let mut proximo_evento = None;
 
         render_titulo(ui);
+        ui.add_space(10.0);
+        ui.separator();
         ui.add_space(30.0);
 
         render_boton_seleccion_clasificados(ui, &mut proximo_evento);
@@ -81,7 +84,7 @@ fn render_boton_clasificacion_aleatoria(
         },
         || {
             if proximo_evento.is_none() {
-                *proximo_evento = Some(EventoMenuPrincipal::IrAClasificacionAleatoria);
+                *proximo_evento = Some(EventoMenuPrincipal::ClasificacionAleatoria);
             }
         },
     );

@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 pub trait EquipoInfo {
     /// Devuelve el **nombre** del equipo (inmutable).
     fn get_nombre(&self) -> &String;
@@ -29,5 +31,11 @@ impl EquipoInfo for Equipo {
 
     fn get_codigo(&self) -> &String {
         &self.codigo
+    }
+}
+
+impl Display for Equipo {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{} ({})", self.nombre, self.codigo)
     }
 }

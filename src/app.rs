@@ -1,7 +1,8 @@
 use std::any::TypeId;
-use crate::{ControladorObj, EventoGlobal, ModeloSimulador};
-use crate::ventanas::MenuPrincipal;
 use eframe::egui::{CentralPanel, Context, Frame, Pos2, Ui, Vec2, ViewportCommand};
+use crate::eventos::EventoGlobal;
+use crate::ventanas::{MenuPrincipal, MuestraClasificados};
+use crate::{ControladorObj, ModeloSimulador};
 
 #[derive(Default)]
 pub struct AppSimulador {
@@ -37,6 +38,8 @@ impl AppSimulador {
     fn cambiar_de_vista(&mut self, nueva_vista: TypeId) {
         if nueva_vista == TypeId::of::<MenuPrincipal>() {
             self.vista_actual = ControladorObj::new::<MenuPrincipal>();
+        } else if nueva_vista == TypeId::of::<MuestraClasificados>() {
+            self.vista_actual = ControladorObj::new::<MuestraClasificados>();
         } else {
             panic!("Tipo de vista no reconocido.")
         }

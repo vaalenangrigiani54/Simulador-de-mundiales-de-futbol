@@ -1,4 +1,4 @@
-use std::cmp::Ordering;
+use std::{cmp::Ordering, fmt::Display};
 use crate::{Equipo, EquipoInfo, ResultadoEquipo};
 
 
@@ -143,6 +143,12 @@ impl EquipoParticipante {
     }
 }
 
+impl Display for EquipoParticipante {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.id.fmt(f)
+    }
+}
+
 impl EquipoInfo for EquipoParticipante {
     fn get_nombre(&self) -> &String {
         &self.id.get_nombre()
@@ -212,7 +218,7 @@ impl Ord for EquipoParticipante {
             return ord;
         }
 
-        other.id.cmp(&self.id)
+        other.id.cmp(&self.id).reverse()
     }
 }
 

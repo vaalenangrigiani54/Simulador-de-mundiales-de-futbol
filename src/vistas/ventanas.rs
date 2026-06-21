@@ -22,9 +22,18 @@ pub trait VentanaInfo {
 #[derive(Default)]
 pub struct MenuPrincipal;
 
+#[derive(Default)]
+pub struct MuestraClasificados;
+
 
 impl VentanaInfo for MenuPrincipal {
     fn dimensiones(&self) -> Vec2 {
         Vec2::new(800.0, 480.0)
+    }
+}
+
+impl VentanaInfo for MuestraClasificados {
+    fn dimensiones(&self) -> Vec2 {
+        Vec2::new(640.0, 640.0)
     }
 }

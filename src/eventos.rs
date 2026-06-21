@@ -11,6 +11,13 @@ pub enum EventoGlobal {
 pub enum EventoMenuPrincipal {
     EstablecerCantidadDeEquipos(usize),
     IrASeleccionarEquiposClasificados,
-    IrAClasificacionAleatoria,
+    ClasificacionAleatoria,
     Salir,
+}
+
+/// Eventos para la vista `MuestraClasificados`.
+pub enum EventoMuestraClasificados {
+    IrAInicioDelMundial,
+    IrAFormacionDeGrupos,
+    IrASeleccionarEquiposClasificados
 }
