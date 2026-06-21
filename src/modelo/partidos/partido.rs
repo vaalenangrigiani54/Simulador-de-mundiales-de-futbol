@@ -182,15 +182,15 @@ impl Debug for Partido {
 
 #[cfg(test)]
 mod test {
-    use std::{cell::RefCell, rc::Rc};
-
     use super::*;
     use crate::Equipo;
 
     #[test]
     fn test_simulacion() {
-        let equipo_loc = Rc::new(RefCell::new(Equipo::new("Argentina", "ARG").clasificarse()));
-        let equipo_vis = Rc::new(RefCell::new(Equipo::new("Francia", "FRA").clasificarse()));
+        let argentina = Equipo::new("Argentina", "ARG");
+        let francia = Equipo::new("Francia", "FRA");
+        let equipo_loc = EquipoParticipanteRef::from(&argentina);
+        let equipo_vis = EquipoParticipanteRef::from(&francia);
 
         let mut partido = Partido::new(equipo_loc, equipo_vis);
         partido.simular();

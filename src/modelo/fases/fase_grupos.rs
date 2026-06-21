@@ -182,8 +182,6 @@ fn crear_partido(
 
 #[cfg(test)]
 mod test {
-    use std::{cell::RefCell, rc::Rc};
-
     use super::*;
     use crate::{Equipo, modelo::equipo::IDEquipo};
 
@@ -193,16 +191,16 @@ mod test {
         let cod_barcelona = "FCB";
         let cod_bayern = "BAY";
         let cod_psg = "PSG";
-        let madrid = Equipo::new("Real Madrid", cod_madrid).clasificarse();
-        let barcelona = Equipo::new("F.C. Barcelona", cod_barcelona).clasificarse();
-        let bayern = Equipo::new("Bayern Munich", cod_bayern).clasificarse();
-        let psg = Equipo::new("París Saint Germain", cod_psg).clasificarse();
+        let madrid = Equipo::new("Real Madrid", cod_madrid);
+        let barcelona = Equipo::new("F.C. Barcelona", cod_barcelona);
+        let bayern = Equipo::new("Bayern Munich", cod_bayern);
+        let psg = Equipo::new("París Saint Germain", cod_psg);
 
         let equipos = vec![
-            Rc::new(RefCell::new(madrid)),
-            Rc::new(RefCell::new(barcelona)),
-            Rc::new(RefCell::new(bayern)),
-            Rc::new(RefCell::new(psg)),
+            EquipoParticipanteRef::from(&madrid),
+            EquipoParticipanteRef::from(&barcelona),
+            EquipoParticipanteRef::from(&bayern),
+            EquipoParticipanteRef::from(&psg),
         ];
 
         let orden_esperado = vec![

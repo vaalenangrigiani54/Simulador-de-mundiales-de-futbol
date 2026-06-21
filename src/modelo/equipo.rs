@@ -1,5 +1,4 @@
-use std::{cell::RefCell, cmp::Ordering, rc::Rc};
-
+use std::{cell::RefCell, cmp::Ordering, ops::{Deref, DerefMut}, rc::Rc};
 use crate::ResultadoEquipo;
 
 pub trait IDEquipo {
@@ -45,33 +44,14 @@ pub struct EquipoParticipante {
 }
 
 /// Múltiples referencias mutables a un equipo participante.
-pub type EquipoParticipanteRef = Rc<RefCell<EquipoParticipante>>;
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub struct EquipoParticipanteRef(Rc<RefCell<EquipoParticipante>>);
 
 impl Equipo {
     pub fn new(nombre: impl Into<String>, codigo: impl Into<String>) -> Self {
         Equipo {
             nombre: nombre.into(),
             codigo: codigo.into(),
-        }
-    }
-
-    /// Convierte al equipo en `EquipoParticipante`.
-    ///
-    /// Pierde el ownership, pero se puede volver a `Equipo` con el método para descalificarse.
-    ///
-    /// Ver la documentación de [`EquipoParticipante`] para más información.
-    pub fn clasificarse(self) -> EquipoParticipante {
-        EquipoParticipante {
-            id: self,
-            puntos: 0,
-            goles_a_favor: 0,
-            goles_en_contra: 0,
-            ganados: 0,
-            empatados: 0,
-            perdidos: 0,
-            amarillas: 0,
-            rojas: 0,
-            posicion: ResultadoEquipo::FaseDeGrupos,
         }
     }
 }
@@ -276,5 +256,25 @@ impl Ord for EquipoParticipante {
 impl PartialOrd for EquipoParticipante {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.cmp(other))
+    }
+}
+
+impl From<&Equipo> for EquipoParticipanteRef {
+    fn from(value: &Equipo) -> Self {
+        Self(Rc::new(RefCell::new(EquipoParticipante::new(value))))
+    }
+}
+
+impl Deref for EquipoParticipanteRef {
+    type Target = Rc<RefCell<EquipoParticipante>>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl DerefMut for EquipoParticipanteRef {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
     }
 }
