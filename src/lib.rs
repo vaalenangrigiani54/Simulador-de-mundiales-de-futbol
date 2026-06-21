@@ -4,6 +4,7 @@ pub mod controladores;
 pub mod eventos;
 pub mod modelo;
 pub mod mvc;
+pub mod templates;
 pub mod vistas;
 
 pub use eventos::{EventoGlobal, EventoMenuPrincipal};
@@ -18,6 +19,7 @@ pub use modelo::{
         fase_grupos::FaseDeGrupos,
     },
     grupo::Grupo,
+    modelo::ModeloSimulador,
     mundial::Mundial,
     partidos::{
         gol::Gol,
