@@ -2,9 +2,7 @@ use crate::VentanaInfo;
 use eframe::egui::Vec2;
 
 #[derive(Default)]
-pub struct MenuPrincipal {
-    pub(crate) cantidad_equipos: usize,
-}
+pub struct MenuPrincipal;
 
 impl VentanaInfo for MenuPrincipal {
     fn dimensiones(&self) -> Vec2 {

@@ -1,12 +1,12 @@
 use std::any::TypeId;
 
-use crate::{ControladorObj, EventoGlobal, MenuPrincipal, Mundial};
+use crate::{ControladorObj, EventoGlobal, MenuPrincipal, ModeloSimulador};
 use eframe::egui::{CentralPanel, Context, Frame, Pos2, Ui, Vec2, ViewportCommand};
 
 #[derive(Default)]
 pub struct AppSimulador {
     vista_actual: ControladorObj,
-    modelo: Option<Mundial>,
+    modelo: ModeloSimulador,
 }
 
 impl eframe::App for AppSimulador {

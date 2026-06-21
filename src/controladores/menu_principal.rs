@@ -1,12 +1,14 @@
-use crate::{Controlador, EventoGlobal, EventoMenuPrincipal, MenuPrincipal, Mundial, Ventana};
+use crate::{
+    Controlador, EventoGlobal, EventoMenuPrincipal, MenuPrincipal, ModeloSimulador, Ventana,
+};
 use eframe::egui;
 
 impl Controlador for MenuPrincipal {
-    fn actualizar(&mut self, ui: &mut egui::Ui, _modelo: &mut Option<Mundial>) -> EventoGlobal {
-        if let Some(evento) = Self::renderizar(ui) {
+    fn actualizar(&mut self, ui: &mut egui::Ui, modelo: &mut ModeloSimulador) -> EventoGlobal {
+        if let Some(evento) = self.renderizar(ui) {
             match evento {
                 EventoMenuPrincipal::EstablecerCantidadDeEquipos(cantidad) => {
-                    self.establecer_cantidad_equipos(cantidad)
+                    modelo.cant_participantes = cantidad
                 }
                 EventoMenuPrincipal::IrASeleccionarEquiposClasificados => {
                     return EventoGlobal::Continuar;
@@ -17,11 +19,5 @@ impl Controlador for MenuPrincipal {
         }
 
         EventoGlobal::Continuar
-    }
-}
-
-impl MenuPrincipal {
-    fn establecer_cantidad_equipos(&mut self, cantidad: usize) {
-        self.cantidad_equipos = cantidad;
     }
 }

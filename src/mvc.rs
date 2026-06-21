@@ -1,5 +1,5 @@
 use crate::config::{FONDO_POR_DEFECTO, MARGEN_EXTERIOR_POR_DEFECTO};
-use crate::{EventoGlobal, MenuPrincipal, Mundial};
+use crate::{EventoGlobal, MenuPrincipal, ModeloSimulador};
 use eframe::egui::{Color32, Ui, Vec2};
 use std::ops::{Deref, DerefMut};
 
@@ -24,7 +24,7 @@ pub trait Ventana: VentanaInfo {
     type Evento;
 
     /// Dibuja los componentes y devuelve una posible acción a ejecutarse (evento).
-    fn renderizar(ui: &mut Ui) -> Option<Self::Evento>;
+    fn renderizar(&self, ui: &mut Ui) -> Option<Self::Evento>;
 }
 
 /// Este trait también lo deben implementar todos los tipos de vista.
@@ -32,7 +32,7 @@ pub trait Ventana: VentanaInfo {
 /// Requiere `VentanaInfo` para que los controladores expongan las configuraciones
 /// generales a través de `dyn Controlador`.
 pub trait Controlador: VentanaInfo {
-    fn actualizar(&mut self, ui: &mut Ui, modelo: &mut Option<Mundial>) -> EventoGlobal;
+    fn actualizar(&mut self, ui: &mut Ui, modelo: &mut ModeloSimulador) -> EventoGlobal;
 }
 
 // Trait `Controlador` tratado como un objeto.
