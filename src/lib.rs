@@ -7,12 +7,17 @@ pub mod mvc;
 pub mod templates;
 pub mod vistas;
 
-pub use eventos::{EventoGlobal, EventoMenuPrincipal};
-
 pub use mvc::{Controlador, ControladorObj, Ventana};
 
 pub use modelo::{
-    equipo::{Equipo, EquipoParticipante, EquipoParticipanteRef},
+    equipo::{
+        equipo_participante::EquipoParticipante,
+        equipo_participante_ref::EquipoParticipanteRef,
+        info_equipo::{
+            Equipo,
+            EquipoInfo
+        }
+    },
     fases::{
         fase::{Fase, TipoFaseEliminacion},
         fase_eliminacion::FaseDeEliminacionDirecta,

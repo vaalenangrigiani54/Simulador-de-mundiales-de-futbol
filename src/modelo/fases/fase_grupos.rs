@@ -183,7 +183,7 @@ fn crear_partido(
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::{Equipo, modelo::equipo::IDEquipo};
+    use crate::{Equipo, EquipoInfo};
 
     #[test]
     fn test_algoritmo_berger_4_equipos() {

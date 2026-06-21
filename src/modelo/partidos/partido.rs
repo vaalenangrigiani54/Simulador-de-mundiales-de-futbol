@@ -4,7 +4,7 @@ use std::{
 };
 
 use crate::{
-    EquipoParticipante, EquipoParticipanteRef, Gol, SimuladorDePartidos, modelo::equipo::IDEquipo,
+    EquipoParticipante, EquipoParticipanteRef, Gol, SimuladorDePartidos, EquipoInfo,
 };
 
 /// Estructura de un partido de fútbol, con los equipos local y visitante y sus resultados.

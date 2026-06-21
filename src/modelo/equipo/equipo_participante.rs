@@ -1,20 +1,6 @@
-use std::{cell::RefCell, cmp::Ordering, ops::{Deref, DerefMut}, rc::Rc};
-use crate::ResultadoEquipo;
+use std::cmp::Ordering;
+use crate::{Equipo, EquipoInfo, ResultadoEquipo};
 
-pub trait IDEquipo {
-    /// Devuelve el **nombre** del equipo (inmutable).
-    fn get_nombre(&self) -> &String;
-
-    /// Devuelve el **código FIFA** del equipo (inmutable).
-    fn get_codigo(&self) -> &String;
-}
-
-/// Información general de una selección de fútbol.
-#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
-pub struct Equipo {
-    nombre: String,
-    codigo: String,
-}
 
 /// Simula el equipo que va a participar en el mundial simulado.
 ///
@@ -41,19 +27,6 @@ pub struct EquipoParticipante {
     amarillas: u16,
     rojas: u16,
     pub posicion: ResultadoEquipo,
-}
-
-/// Múltiples referencias mutables a un equipo participante.
-#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
-pub struct EquipoParticipanteRef(Rc<RefCell<EquipoParticipante>>);
-
-impl Equipo {
-    pub fn new(nombre: impl Into<String>, codigo: impl Into<String>) -> Self {
-        Equipo {
-            nombre: nombre.into(),
-            codigo: codigo.into(),
-        }
-    }
 }
 
 impl EquipoParticipante {
@@ -170,23 +143,13 @@ impl EquipoParticipante {
     }
 }
 
-impl IDEquipo for Equipo {
+impl EquipoInfo for EquipoParticipante {
     fn get_nombre(&self) -> &String {
-        &self.nombre
+        &self.id.get_nombre()
     }
 
     fn get_codigo(&self) -> &String {
-        &self.codigo
-    }
-}
-
-impl IDEquipo for EquipoParticipante {
-    fn get_nombre(&self) -> &String {
-        &self.id.nombre
-    }
-
-    fn get_codigo(&self) -> &String {
-        &self.id.codigo
+        &self.id.get_codigo()
     }
 }
 
@@ -256,25 +219,5 @@ impl Ord for EquipoParticipante {
 impl PartialOrd for EquipoParticipante {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.cmp(other))
-    }
-}
-
-impl From<&Equipo> for EquipoParticipanteRef {
-    fn from(value: &Equipo) -> Self {
-        Self(Rc::new(RefCell::new(EquipoParticipante::new(value))))
-    }
-}
-
-impl Deref for EquipoParticipanteRef {
-    type Target = Rc<RefCell<EquipoParticipante>>;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-
-impl DerefMut for EquipoParticipanteRef {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
     }
 }
