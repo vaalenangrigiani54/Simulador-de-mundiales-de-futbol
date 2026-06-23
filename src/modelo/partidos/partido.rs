@@ -187,8 +187,8 @@ mod test {
     fn test_simulacion() {
         let argentina = Equipo::new("Argentina", "ARG");
         let francia = Equipo::new("Francia", "FRA");
-        let equipo_loc = EquipoParticipanteRef::from(&argentina);
-        let equipo_vis = EquipoParticipanteRef::from(&francia);
+        let equipo_loc = EquipoParticipanteRef::from(argentina);
+        let equipo_vis = EquipoParticipanteRef::from(francia);
 
         let mut partido = Partido::new(equipo_loc, equipo_vis);
         partido.simular();

@@ -197,10 +197,10 @@ mod test {
         let psg = Equipo::new("París Saint Germain", cod_psg);
 
         let equipos = vec![
-            EquipoParticipanteRef::from(&madrid),
-            EquipoParticipanteRef::from(&barcelona),
-            EquipoParticipanteRef::from(&bayern),
-            EquipoParticipanteRef::from(&psg),
+            EquipoParticipanteRef::from(madrid),
+            EquipoParticipanteRef::from(barcelona),
+            EquipoParticipanteRef::from(bayern),
+            EquipoParticipanteRef::from(psg),
         ];
 
         let orden_esperado = vec![

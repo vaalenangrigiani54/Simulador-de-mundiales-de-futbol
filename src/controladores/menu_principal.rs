@@ -4,9 +4,14 @@ use crate::{Controlador, Equipo, EquipoParticipanteRef, ModeloSimulador, Ventana
 use eframe::egui;
 use rand::seq::SliceRandom;
 use std::any::TypeId;
+use std::collections::BTreeSet;
 
 impl Controlador for MenuPrincipal {
     fn actualizar(&mut self, ui: &mut egui::Ui, modelo: &mut ModeloSimulador) -> EventoGlobal {
+        if modelo.clasificados.is_some() {
+            modelo.clasificados = None;
+        }
+        
         if let Some(evento) = self.renderizar(ui, modelo) {
             match evento {
                 EventoMenuPrincipal::EstablecerCantidadDeEquipos(cantidad) => {
@@ -32,20 +37,16 @@ impl Controlador for MenuPrincipal {
 fn elegir_clasificados_aleatoriamente(
     cantidad: usize,
     afiliados_fifa: &Vec<Equipo>,
-) -> Vec<EquipoParticipanteRef> {
+) -> BTreeSet<EquipoParticipanteRef> {
     let mut rng = rand::rng();
     let mut pool: Vec<usize> = (0..afiliados_fifa.len()).collect();
 
     pool.shuffle(&mut rng);
     pool.truncate(cantidad);
 
-    let mut clasificados: Vec<EquipoParticipanteRef> = pool
-        .into_iter()
-        .map(|idx| EquipoParticipanteRef::from(&afiliados_fifa[idx]))
-        .collect();
-
-    clasificados.sort();
-    clasificados
+    pool.into_iter()
+        .map(|idx| EquipoParticipanteRef::from(afiliados_fifa[idx].clone()))
+        .collect()
 }
 
 #[cfg(test)]

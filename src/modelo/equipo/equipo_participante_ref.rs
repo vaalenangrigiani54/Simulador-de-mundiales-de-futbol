@@ -10,8 +10,8 @@ use crate::{Equipo, EquipoParticipante};
 #[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct EquipoParticipanteRef(Rc<RefCell<EquipoParticipante>>);
 
-impl From<&Equipo> for EquipoParticipanteRef {
-    fn from(value: &Equipo) -> Self {
+impl From<Equipo> for EquipoParticipanteRef {
+    fn from(value: Equipo) -> Self {
         Self(Rc::new(RefCell::new(EquipoParticipante::new(value))))
     }
 }

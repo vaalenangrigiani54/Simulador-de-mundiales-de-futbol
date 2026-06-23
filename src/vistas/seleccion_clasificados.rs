@@ -1,8 +1,9 @@
 use crate::eventos::EventoSeleccionClasificados;
-use crate::templates::boton::{agregar_boton_atras, agregar_boton_siguiente};
+use crate::templates::boton::{ALTURA_BOTON_PREDETERMINADA, agregar_boton_atras, agregar_boton_siguiente};
+use crate::templates::tabla::{PropiedadesCelda, PropiedadesFila, agregar_tabla};
 use crate::templates::texto::crear_texto;
 use crate::ventanas::SeleccionClasificados;
-use crate::{ModeloSimulador, Ventana};
+use crate::{EquipoInfo, ModeloSimulador, Ventana};
 use eframe::egui::{self, Color32};
 
 const MARGEN_VERTICAL_TABLA: f32 = 25.0;
@@ -18,9 +19,12 @@ impl Ventana for SeleccionClasificados {
         ui.separator();
         ui.add_space(MARGEN_VERTICAL_TABLA);
 
+        render_tabla_equipos(ui, global);
+        ui.add_space(MARGEN_VERTICAL_TABLA);
+        
         ui.columns(3, |columns| {
             render_boton_atras(&mut columns[0], &mut proximo_evento);
-            render_label_seleccionados(&mut columns[1], 0, global.cant_participantes);
+            render_label_seleccionados(&mut columns[1], global.cantidad_clasificados(), global.cant_participantes);
             render_boton_siguiente(&mut columns[2], &mut proximo_evento);
         });
 
@@ -39,12 +43,59 @@ fn render_titulo(ui: &mut egui::Ui) {
     ui.vertical_centered(|ui| ui.heading(texto));
 }
 
-fn render_boton_atras(ui: &mut egui::Ui, proximo_evento: &mut Option<EventoSeleccionClasificados>) {
-    agregar_boton_atras(ui, || {
-        if proximo_evento.is_none() {
-            *proximo_evento = Some(EventoSeleccionClasificados::IrAMenuPrincipal)
-        }
-    });
+fn render_tabla_equipos(ui: &mut egui::Ui, global: &ModeloSimulador) {
+    let encabezado = PropiedadesFila {
+        datos: vec![
+            PropiedadesCelda {
+                texto: crear_texto("Equipo", 30.0, Color32::BLACK, true),
+                fondo_rgb: None,
+                evento: None,
+            },
+            PropiedadesCelda {
+                texto: crear_texto("Código FIFA", 30.0, Color32::BLACK, true),
+                fondo_rgb: None,
+                evento: None,
+            },
+            PropiedadesCelda {
+                texto: crear_texto("Clasificado", 30.0, Color32::BLACK, true),
+                fondo_rgb: None,
+                evento: None,
+            }
+        ],
+        altura: 40.0,
+    };
+
+    let mut filas: Vec<PropiedadesFila> = global.get_equipos_disponibles()
+        .iter()
+        .map(|equipo| {
+            let clasificado_txt = if global.esta_clasificado(equipo) { "Sí" } else { "No" };
+
+            PropiedadesFila {
+                datos: vec![
+                    PropiedadesCelda {
+                        texto: crear_texto(equipo.get_nombre(), 22.0, Color32::BLACK, false),
+                        fondo_rgb: None,
+                        evento: None,
+                    },
+                    PropiedadesCelda {
+                        texto: crear_texto(equipo.get_codigo(), 22.0, Color32::BLACK, false),
+                        fondo_rgb: None,
+                        evento: None,
+                    },
+                    PropiedadesCelda {
+                        texto: crear_texto(clasificado_txt, 22.0, Color32::BLACK, false),
+                        fondo_rgb: None,
+                        evento: None,
+                    }
+                ],
+                altura: 30.0,
+            }
+        })
+        .collect();
+    
+    let altura_maxima = ui.available_height() - ALTURA_BOTON_PREDETERMINADA - MARGEN_VERTICAL_TABLA - 5.0;
+    
+    agregar_tabla(ui, &[3, 2, 1], &encabezado, &mut filas, altura_maxima);
 }
 
 fn render_label_seleccionados(ui: &mut egui::Ui, cantidad: usize, total: usize) {
@@ -57,6 +108,14 @@ fn render_label_seleccionados(ui: &mut egui::Ui, cantidad: usize, total: usize) 
         );
 
         ui.label(texto);
+    });
+}
+
+fn render_boton_atras(ui: &mut egui::Ui, proximo_evento: &mut Option<EventoSeleccionClasificados>) {
+    agregar_boton_atras(ui, || {
+        if proximo_evento.is_none() {
+            *proximo_evento = Some(EventoSeleccionClasificados::IrAMenuPrincipal)
+        }
     });
 }
 

@@ -1,26 +1,30 @@
 use std::any::TypeId;
+use std::collections::BTreeSet;
 use eframe::egui;
 use crate::eventos::{EventoGlobal, EventoSeleccionClasificados};
 use crate::ventanas::{MenuPrincipal, MuestraClasificados, SeleccionClasificados};
-use crate::{Controlador, Ventana};
+use crate::{Controlador, EquipoParticipanteRef, ModeloSimulador, Ventana};
 
 impl Controlador for SeleccionClasificados {
-    fn actualizar(&mut self, ui: &mut egui::Ui, modelo: &mut crate::ModeloSimulador) -> EventoGlobal {
+    fn actualizar(&mut self, ui: &mut egui::Ui, modelo: &mut ModeloSimulador) -> EventoGlobal {
+        if modelo.clasificados.is_none() {
+            modelo.clasificados = Some(BTreeSet::new());
+        }
+        
         if let Some(evento) = self.renderizar(ui, modelo) {
             match evento {
-                EventoSeleccionClasificados::AgregarEquipoClasificado(_) => {
-
+                EventoSeleccionClasificados::AgregarOQuitarEquipoClasificado(equipo, agregar) => {
+                    if let Some(clasificados) = modelo.clasificados.as_mut() {
+                        let equipo = EquipoParticipanteRef::from(equipo);
+                        if agregar {
+                            clasificados.insert(equipo);
+                        } else {
+                            clasificados.remove(&equipo);
+                        }
+                    }
                 },
-                EventoSeleccionClasificados::QuitarEquipoClasificado(_) => {
-                    
-                },
-                EventoSeleccionClasificados::IrAMenuPrincipal => {
-                    modelo.clasificados = None;
-                    return EventoGlobal::CambiarDeVista(TypeId::of::<MenuPrincipal>());
-                },
-                EventoSeleccionClasificados::IrAMuestraClasificados => {
-                    return EventoGlobal::CambiarDeVista(TypeId::of::<MuestraClasificados>());
-                },
+                EventoSeleccionClasificados::IrAMenuPrincipal => return EventoGlobal::CambiarDeVista(TypeId::of::<MenuPrincipal>()),
+                EventoSeleccionClasificados::IrAMuestraClasificados => return EventoGlobal::CambiarDeVista(TypeId::of::<MuestraClasificados>()),
             }
         }
 

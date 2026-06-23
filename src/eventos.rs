@@ -19,8 +19,7 @@ pub enum EventoMenuPrincipal {
 
 /// Eventos para la vista `SeleccionClasificados`.
 pub enum EventoSeleccionClasificados {
-    AgregarEquipoClasificado(Equipo),
-    QuitarEquipoClasificado(Equipo),
+    AgregarOQuitarEquipoClasificado(Equipo, bool),
     IrAMenuPrincipal,
     IrAMuestraClasificados,
 }

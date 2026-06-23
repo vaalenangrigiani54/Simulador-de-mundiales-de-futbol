@@ -1,3 +1,5 @@
+use std::collections::BTreeSet;
+
 use crate::eventos::EventoMuestraClasificados;
 use crate::templates::boton::{
     ALTURA_BOTON_PREDETERMINADA, agregar_boton_atras, agregar_boton_siguiente,
@@ -48,41 +50,41 @@ fn render_titulo(ui: &mut egui::Ui, cantidad: usize) {
     ui.vertical_centered(|ui| ui.heading(texto));
 }
 
-fn render_tabla_clasificados(ui: &mut egui::Ui, clasificados: &Vec<EquipoParticipanteRef>) {
-    let col_equipo = PropiedadesCelda {
-        texto: crear_texto("Equipo", 30.0, Color32::BLACK, true),
-        fondo_rgb: None,
-        evento: None,
-    };
-
-    let col_codigo = PropiedadesCelda {
-        texto: crear_texto("Código FIFA", 30.0, Color32::BLACK, true),
-        fondo_rgb: None,
-        evento: None,
-    };
-
+fn render_tabla_clasificados(ui: &mut egui::Ui, clasificados: &BTreeSet<EquipoParticipanteRef>) {
     let encabezado = PropiedadesFila {
-        datos: vec![col_equipo, col_codigo],
+        datos: vec![
+            PropiedadesCelda {
+                texto: crear_texto("Equipo", 30.0, Color32::BLACK, true),
+                fondo_rgb: None,
+                evento: None,
+            },
+            PropiedadesCelda {
+                texto: crear_texto("Código FIFA", 30.0, Color32::BLACK, true),
+                fondo_rgb: None,
+                evento: None,
+            }
+        ],
         altura: 40.0,
     };
 
     let mut filas: Vec<PropiedadesFila> = clasificados
         .iter()
         .map(|equipo| {
-            let celda_equipo = PropiedadesCelda {
-                texto: crear_texto(equipo.borrow().get_nombre(), 22.0, Color32::BLACK, false),
-                fondo_rgb: None,
-                evento: None,
-            };
-
-            let celda_codigo = PropiedadesCelda {
-                texto: crear_texto(equipo.borrow().get_codigo(), 22.0, Color32::BLACK, false),
-                fondo_rgb: None,
-                evento: None,
-            };
+            let equipo = equipo.borrow();
 
             PropiedadesFila {
-                datos: vec![celda_equipo, celda_codigo],
+                datos: vec![
+                    PropiedadesCelda {
+                        texto: crear_texto(equipo.get_nombre(), 22.0, Color32::BLACK, false),
+                        fondo_rgb: None,
+                        evento: None,
+                    },
+                    PropiedadesCelda {
+                        texto: crear_texto(equipo.get_codigo(), 22.0, Color32::BLACK, false),
+                        fondo_rgb: None,
+                        evento: None,
+                    }
+                ],
                 altura: 30.0,
             }
         })

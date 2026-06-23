@@ -1,3 +1,4 @@
+use std::collections::BTreeSet;
 use crate::{Equipo, EquipoParticipanteRef, Grupo, Mundial};
 
 /// Estructura principal del modelo global.
@@ -9,7 +10,7 @@ pub struct ModeloSimulador {
     pub cant_participantes: usize,
 
     /// Campo auxiliar para los equipos clasificados.
-    pub clasificados: Option<Vec<EquipoParticipanteRef>>,
+    pub clasificados: Option<BTreeSet<EquipoParticipanteRef>>,
 
     /// Campo auxiliar para los grupos.
     pub grupos: Option<Vec<Grupo>>,
@@ -34,6 +35,24 @@ impl ModeloSimulador {
     /// Devuelve todos los equipos afiliados a la FIFA.
     pub fn get_equipos_disponibles(&self) -> &Vec<Equipo> {
         return &self.afiliados_fifa;
+    }
+
+    /// Devuelve la cantidad actual de equipos clasificados
+    pub fn cantidad_clasificados(&self) -> usize {
+        if let Some(clasificados) = &self.clasificados {
+            clasificados.len()
+        } else {
+            0
+        }
+    }
+
+    /// Devuelve `true` si el equipo está clasificado. Caso contrario `false`.
+    pub fn esta_clasificado(&self, equipo: &Equipo) -> bool {
+        if let Some(clasificados) = &self.clasificados {
+            clasificados.contains(&EquipoParticipanteRef::from(equipo.clone()))
+        } else {
+            false
+        }
     }
 }
 

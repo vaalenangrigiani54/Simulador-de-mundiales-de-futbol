@@ -1,5 +1,7 @@
+use std::any::TypeId;
+
 use crate::eventos::{EventoGlobal, EventoMuestraClasificados};
-use crate::ventanas::MuestraClasificados;
+use crate::ventanas::{MuestraClasificados, SeleccionClasificados};
 use crate::{Controlador, ModeloSimulador, Ventana};
 use eframe::egui;
 
@@ -9,7 +11,7 @@ impl Controlador for MuestraClasificados {
             match evento {
                 EventoMuestraClasificados::IrAInicioDelMundial => todo!(),
                 EventoMuestraClasificados::IrAFormacionDeGrupos => todo!(),
-                EventoMuestraClasificados::IrASeleccionarEquiposClasificados => todo!(),
+                EventoMuestraClasificados::IrASeleccionarEquiposClasificados => return EventoGlobal::CambiarDeVista(TypeId::of::<SeleccionClasificados>()),
             }
         }
 

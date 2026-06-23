@@ -14,7 +14,7 @@ use std::{cmp::Ordering, fmt::Display};
 /// 8. Tarjetas amarillas (-).
 /// 9. Tarjetas rojas (-).
 /// 10. ID.
-#[derive(PartialEq, Eq)]
+#[derive(Eq)]
 pub struct EquipoParticipante {
     id: Equipo,
     puntos: u16,
@@ -29,10 +29,10 @@ pub struct EquipoParticipante {
 }
 
 impl EquipoParticipante {
-    /// Crea el equipo clasificado a partir de `id`, el cual se clona.
-    pub fn new(id: &Equipo) -> Self {
+    /// Crea el equipo clasificado a partir de `id`.
+    pub fn new(id: Equipo) -> Self {
         Self {
-            id: id.clone(),
+            id,
             puntos: 0,
             goles_a_favor: 0,
             goles_en_contra: 0,
@@ -218,6 +218,12 @@ impl Ord for EquipoParticipante {
         }
 
         other.id.cmp(&self.id).reverse()
+    }
+}
+
+impl PartialEq for EquipoParticipante {
+    fn eq(&self, other: &Self) -> bool {
+        self.id == other.id
     }
 }
 
