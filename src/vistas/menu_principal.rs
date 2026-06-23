@@ -52,6 +52,7 @@ fn render_boton_seleccion_clasificados(
                 y: 35.0,
             },
             fondo_rgb: (255, 255, 200),
+            habilitado: true
         },
         || {
             if proximo_evento.is_none() {
@@ -81,6 +82,7 @@ fn render_boton_clasificacion_aleatoria(
                 y: 35.0,
             },
             fondo_rgb: (255, 200, 255),
+            habilitado: true
         },
         || {
             if proximo_evento.is_none() {
@@ -102,6 +104,7 @@ fn render_boton_salir(ui: &mut egui::Ui, proximo_evento: &mut Option<EventoMenuP
                 y: 35.0,
             },
             fondo_rgb: (255, 200, 200),
+            habilitado: true
         },
         || {
             if proximo_evento.is_none() {

@@ -97,7 +97,7 @@ fn render_tabla_clasificados(ui: &mut egui::Ui, clasificados: &BTreeSet<EquipoPa
 }
 
 fn render_boton_atras(ui: &mut egui::Ui, proximo_evento: &mut Option<EventoMuestraClasificados>) {
-    agregar_boton_atras(ui, || {
+    agregar_boton_atras(ui, true, || {
         if proximo_evento.is_none() {
             *proximo_evento = Some(EventoMuestraClasificados::IrASeleccionarEquiposClasificados)
         }
@@ -108,7 +108,7 @@ fn render_boton_siguiente(
     ui: &mut egui::Ui,
     proximo_evento: &mut Option<EventoMuestraClasificados>,
 ) {
-    agregar_boton_siguiente(ui, || {
+    agregar_boton_siguiente(ui, true, || {
         if proximo_evento.is_none() {
             *proximo_evento = Some(EventoMuestraClasificados::IrAInicioDelMundial)
         }

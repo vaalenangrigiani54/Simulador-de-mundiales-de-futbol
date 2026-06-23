@@ -13,9 +13,12 @@ impl Controlador for SeleccionClasificados {
         
         if let Some(evento) = self.renderizar(ui, modelo) {
             match evento {
-                EventoSeleccionClasificados::AgregarOQuitarEquipoClasificado(equipo, agregar) => {
+                EventoSeleccionClasificados::AgregarOQuitarEquipoClasificado(idx_equipo, agregar) => {
+                    let equipo = (&modelo.get_equipos_disponibles()[idx_equipo]).clone();
+                    
                     if let Some(clasificados) = modelo.clasificados.as_mut() {
                         let equipo = EquipoParticipanteRef::from(equipo);
+
                         if agregar {
                             clasificados.insert(equipo);
                         } else {

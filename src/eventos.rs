@@ -1,7 +1,5 @@
 use std::any::TypeId;
 
-use crate::Equipo;
-
 /// Decide entre continuar, cambiar de vista o salir del programa.
 pub enum EventoGlobal {
     Continuar,
@@ -19,7 +17,7 @@ pub enum EventoMenuPrincipal {
 
 /// Eventos para la vista `SeleccionClasificados`.
 pub enum EventoSeleccionClasificados {
-    AgregarOQuitarEquipoClasificado(Equipo, bool),
+    AgregarOQuitarEquipoClasificado(usize, bool),
     IrAMenuPrincipal,
     IrAMuestraClasificados,
 }
