@@ -25,6 +25,14 @@ pub enum EventoSeleccionClasificados {
 /// Eventos para la vista `MuestraClasificados`.
 pub enum EventoMuestraClasificados {
     IrAInicioDelMundial,
-    IrAFormacionDeGrupos,
+    IrAEditarGrupos,
     IrASeleccionarEquiposClasificados,
+}
+
+/// Eventos para la vista `InicioMundial`.
+pub enum EventoInicioMundial {
+    VerConformacionDeGrupos,
+    IrAEditarGrupos,
+    EmpezarSimulacion,
+    VolverAlMenuPrincipal,
 }

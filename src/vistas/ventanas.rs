@@ -26,6 +26,9 @@ pub struct SeleccionClasificados;
 #[derive(Default)]
 pub struct MuestraClasificados;
 
+#[derive(Default)]
+pub struct InicioMundial;
+
 impl VentanaInfo for MenuPrincipal {
     fn dimensiones(&self) -> Vec2 {
         Vec2::new(800.0, 480.0)
@@ -41,5 +44,11 @@ impl VentanaInfo for SeleccionClasificados {
 impl VentanaInfo for MuestraClasificados {
     fn dimensiones(&self) -> Vec2 {
         Vec2::new(640.0, 640.0)
+    }
+}
+
+impl VentanaInfo for InicioMundial {
+    fn dimensiones(&self) -> Vec2 {
+        Vec2::new(900.0, 400.0)
     }
 }

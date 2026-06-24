@@ -8,9 +8,9 @@ use std::collections::BTreeSet;
 
 impl Controlador for MenuPrincipal {
     fn actualizar(&mut self, ui: &mut egui::Ui, modelo: &mut ModeloSimulador) -> EventoGlobal {
-        if modelo.clasificados.is_some() {
-            modelo.clasificados = None;
-        }
+        modelo.clasificados.take();
+        modelo.grupos.take();
+        modelo.mundial.take();
         
         if let Some(evento) = self.renderizar(ui, modelo) {
             match evento {

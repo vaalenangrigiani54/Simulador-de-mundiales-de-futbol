@@ -42,7 +42,9 @@ impl AppSimulador {
             self.vista_actual = ControladorObj::new::<SeleccionClasificados>();
         } else if nueva_vista == TypeId::of::<MuestraClasificados>() {
             self.vista_actual = ControladorObj::new::<MuestraClasificados>();
-        } else {
+        } else if nueva_vista == TypeId::of::<InicioMundial>() {
+            self.vista_actual = ControladorObj::new::<InicioMundial>();
+        }else {
             panic!("Tipo de vista no reconocido.")
         }
     }
