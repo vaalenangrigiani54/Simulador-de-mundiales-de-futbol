@@ -2,7 +2,7 @@ use std::collections::BTreeSet;
 
 use crate::eventos::EventoMuestraClasificados;
 use crate::templates::boton::{
-    ALTURA_BOTON_PREDETERMINADA, agregar_boton_atras, agregar_boton_siguiente,
+    ALTURA_BOTON_PREDETERMINADA, agregar_boton, propiedades_boton_atras, propiedades_boton_siguiente,
 };
 use crate::templates::tabla::{PropiedadesCelda, PropiedadesFila, agregar_tabla};
 use crate::templates::texto::crear_texto;
@@ -97,7 +97,9 @@ fn render_tabla_clasificados(ui: &mut egui::Ui, clasificados: &BTreeSet<EquipoPa
 }
 
 fn render_boton_atras(ui: &mut egui::Ui, proximo_evento: &mut Option<EventoMuestraClasificados>) {
-    agregar_boton_atras(ui, true, || {
+    let cfg = propiedades_boton_atras(true, None);
+
+    agregar_boton(ui, cfg, || {
         if proximo_evento.is_none() {
             *proximo_evento = Some(EventoMuestraClasificados::IrASeleccionarEquiposClasificados)
         }
@@ -108,7 +110,9 @@ fn render_boton_siguiente(
     ui: &mut egui::Ui,
     proximo_evento: &mut Option<EventoMuestraClasificados>,
 ) {
-    agregar_boton_siguiente(ui, true, || {
+    let cfg = propiedades_boton_siguiente(true, None);
+
+    agregar_boton(ui, cfg, || {
         if proximo_evento.is_none() {
             *proximo_evento = Some(EventoMuestraClasificados::IrAInicioDelMundial)
         }

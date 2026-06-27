@@ -3,7 +3,7 @@ use std::rc::Rc;
 
 use eframe::egui::{self, Color32};
 use crate::eventos::EventoSeleccionClasificados;
-use crate::templates::boton::{ALTURA_BOTON_PREDETERMINADA, agregar_boton_atras, agregar_boton_siguiente};
+use crate::templates::boton::{ALTURA_BOTON_PREDETERMINADA, agregar_boton, propiedades_boton_atras, propiedades_boton_siguiente};
 use crate::templates::tabla::{PropiedadesCelda, PropiedadesFila, agregar_tabla};
 use crate::templates::texto::crear_texto;
 use crate::ventanas::SeleccionClasificados;
@@ -132,7 +132,9 @@ fn render_label_seleccionados(ui: &mut egui::Ui, cantidad: usize, total: usize) 
 }
 
 fn render_boton_atras(ui: &mut egui::Ui, proximo_evento: &mut Option<EventoSeleccionClasificados>) {
-    agregar_boton_atras(ui, true, || {
+    let cfg = propiedades_boton_atras(true, None);
+    
+    agregar_boton(ui, cfg, || {
         if proximo_evento.is_none() {
             *proximo_evento = Some(EventoSeleccionClasificados::IrAMenuPrincipal)
         }
@@ -145,7 +147,9 @@ fn render_boton_siguiente(
     total: usize,
     proximo_evento: &mut Option<EventoSeleccionClasificados>,
 ) {
-    agregar_boton_siguiente(ui, cantidad == total, || {
+    let cfg = propiedades_boton_siguiente(cantidad == total, None);
+    
+    agregar_boton(ui, cfg, || {
         if proximo_evento.is_none() {
             *proximo_evento = Some(EventoSeleccionClasificados::IrAMuestraClasificados)
         }
