@@ -11,7 +11,7 @@ pub trait Ventana: VentanaInfo {
     /// Dibuja los componentes y devuelve una posible acción a ejecutarse (evento).
     ///
     /// Se puede pasar el estado global para renderizar cosas de manera dinámica.
-    fn renderizar(&self, ui: &mut Ui, global: &ModeloSimulador) -> Option<Self::Evento>;
+    fn renderizar(&mut self, ui: &mut Ui, global: &ModeloSimulador) -> Option<Self::Evento>;
 }
 
 /// Este trait también lo deben implementar todos los tipos de vista.

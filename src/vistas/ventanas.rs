@@ -18,16 +18,22 @@ pub trait VentanaInfo {
 }
 
 #[derive(Default)]
-pub struct MenuPrincipal;
+pub struct MenuPrincipal {
+    pub(crate) mostrar_popup_salir: bool
+}
 
 #[derive(Default)]
 pub struct SeleccionClasificados;
 
 #[derive(Default)]
-pub struct MuestraClasificados;
+pub struct MuestraClasificados {
+    pub(crate) mostrar_popup_sorteo_o_eleccion: bool
+}
 
 #[derive(Default)]
-pub struct InicioMundial;
+pub struct InicioMundial {
+    pub(crate) mostrar_popup_menu: bool
+}
 
 impl VentanaInfo for MenuPrincipal {
     fn dimensiones(&self) -> Vec2 {

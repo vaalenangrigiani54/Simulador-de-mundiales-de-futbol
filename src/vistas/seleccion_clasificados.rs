@@ -14,144 +14,148 @@ const MARGEN_VERTICAL_TABLA: f32 = 25.0;
 impl Ventana for SeleccionClasificados {
     type Evento = EventoSeleccionClasificados;
 
-    fn renderizar(&self, ui: &mut egui::Ui, global: &ModeloSimulador) -> Option<Self::Evento> {
+    fn renderizar(&mut self, ui: &mut egui::Ui, global: &ModeloSimulador) -> Option<Self::Evento> {
         let mut proximo_evento = None;
 
-        render_titulo(ui);
+        self.render_titulo(ui);
         ui.add_space(10.0);
         ui.separator();
         ui.add_space(MARGEN_VERTICAL_TABLA);
 
-        render_tabla_equipos(ui, global, &mut proximo_evento);
+        self.render_tabla_equipos(ui, global, &mut proximo_evento);
         ui.add_space(MARGEN_VERTICAL_TABLA);
         
         ui.columns(3, |columns| {
             let cantidad = global.cantidad_clasificados();
-            render_boton_atras(&mut columns[0], &mut proximo_evento);
-            render_label_seleccionados(&mut columns[1], cantidad, global.cant_participantes);
-            render_boton_siguiente(&mut columns[2], cantidad, global.cant_participantes, &mut proximo_evento);
+            self.render_boton_atras(&mut columns[0], &mut proximo_evento);
+            self.render_label_seleccionados(&mut columns[1], cantidad, global.cant_participantes);
+            self.render_boton_siguiente(&mut columns[2], cantidad, global.cant_participantes, &mut proximo_evento);
         });
 
         proximo_evento
     }
 }
 
-fn render_titulo(ui: &mut egui::Ui) {
-    let texto = crear_texto(
-        "SELECCIONAR A LOS CLASIFICADOS",
-        50.0,
-        Color32::BLACK,
-        true,
-    );
-
-    ui.vertical_centered(|ui| ui.heading(texto));
-}
-
-fn render_tabla_equipos(
-    ui: &mut egui::Ui,
-    global: &ModeloSimulador,
-    proximo_evento: &mut Option<EventoSeleccionClasificados>
-) {
-    let encabezado = PropiedadesFila {
-        datos: vec![
-            PropiedadesCelda {
-                texto: crear_texto("Equipo", 30.0, Color32::BLACK, true),
-                fondo_rgb: None,
-                evento: None,
-            },
-            PropiedadesCelda {
-                texto: crear_texto("Código FIFA", 30.0, Color32::BLACK, true),
-                fondo_rgb: None,
-                evento: None,
-            },
-            PropiedadesCelda {
-                texto: crear_texto("Clasificado", 30.0, Color32::BLACK, true),
-                fondo_rgb: None,
-                evento: None,
-            }
-        ],
-        altura: 40.0,
-    };
-
-    let evento_detectado = Rc::new(RefCell::new(None));
-    let mut filas: Vec<PropiedadesFila> = global.get_equipos_disponibles()
-        .iter()
-        .enumerate()
-        .map(|(idx, equipo)| {
-            let clasificado = global.esta_clasificado(equipo);
-            let clasificado_txt = if clasificado { "Sí" } else { "No" };
-            let evento_detectado_celda = Rc::clone(&evento_detectado);
-
-            PropiedadesFila {
-                datos: vec![
-                    PropiedadesCelda {
-                        texto: crear_texto(equipo.get_nombre(), 22.0, Color32::BLACK, false),
-                        fondo_rgb: None,
-                        evento: None,
-                    },
-                    PropiedadesCelda {
-                        texto: crear_texto(equipo.get_codigo(), 22.0, Color32::BLACK, false),
-                        fondo_rgb: None,
-                        evento: None,
-                    },
-                    PropiedadesCelda {
-                        texto: crear_texto(clasificado_txt, 22.0, Color32::BLACK, false),
-                        fondo_rgb: None,
-                        evento: Some(Box::new(move || {
-                            *evento_detectado_celda.borrow_mut() = Some(EventoSeleccionClasificados::AgregarOQuitarEquipoClasificado(idx, !clasificado));
-                        })),
-                    }
-                ],
-                altura: 30.0,
-            }
-        })
-        .collect();
-    
-    let altura_maxima = ui.available_height() - ALTURA_BOTON_PREDETERMINADA - MARGEN_VERTICAL_TABLA - 5.0;
-    
-    agregar_tabla(ui, &[3, 2, 1], &encabezado, &mut filas, altura_maxima);
-
-    if let Some(evento) = evento_detectado.borrow_mut().take() {
-        if proximo_evento.is_none() {
-            *proximo_evento = Some(evento);
-        }
-    }
-}
-
-fn render_label_seleccionados(ui: &mut egui::Ui, cantidad: usize, total: usize) {
-    ui.vertical_centered(|ui| {
+impl SeleccionClasificados {
+    fn render_titulo(&self, ui: &mut egui::Ui) {
         let texto = crear_texto(
-            format!("Cantidad seleccionados: {cantidad} / {total}"),
-            20.0,
+            "SELECCIONAR A LOS CLASIFICADOS",
+            50.0,
             Color32::BLACK,
-            false
+            true,
         );
 
-        ui.label(texto);
-    });
-}
+        ui.vertical_centered(|ui| ui.heading(texto));
+    }
 
-fn render_boton_atras(ui: &mut egui::Ui, proximo_evento: &mut Option<EventoSeleccionClasificados>) {
-    let cfg = propiedades_boton_atras(true, None);
-    
-    agregar_boton(ui, cfg, || {
-        if proximo_evento.is_none() {
-            *proximo_evento = Some(EventoSeleccionClasificados::IrAMenuPrincipal)
-        }
-    });
-}
+    fn render_tabla_equipos(
+        &self,
+        ui: &mut egui::Ui,
+        global: &ModeloSimulador,
+        proximo_evento: &mut Option<EventoSeleccionClasificados>
+    ) {
+        let encabezado = PropiedadesFila {
+            datos: vec![
+                PropiedadesCelda {
+                    texto: crear_texto("Equipo", 30.0, Color32::BLACK, true),
+                    fondo_rgb: None,
+                    evento: None,
+                },
+                PropiedadesCelda {
+                    texto: crear_texto("Código FIFA", 30.0, Color32::BLACK, true),
+                    fondo_rgb: None,
+                    evento: None,
+                },
+                PropiedadesCelda {
+                    texto: crear_texto("Clasificado", 30.0, Color32::BLACK, true),
+                    fondo_rgb: None,
+                    evento: None,
+                }
+            ],
+            altura: 40.0,
+        };
 
-fn render_boton_siguiente(
-    ui: &mut egui::Ui,
-    cantidad: usize,
-    total: usize,
-    proximo_evento: &mut Option<EventoSeleccionClasificados>,
-) {
-    let cfg = propiedades_boton_siguiente(cantidad == total, None);
-    
-    agregar_boton(ui, cfg, || {
-        if proximo_evento.is_none() {
-            *proximo_evento = Some(EventoSeleccionClasificados::IrAMuestraClasificados)
+        let evento_detectado = Rc::new(RefCell::new(None));
+        let mut filas: Vec<PropiedadesFila> = global.get_equipos_disponibles()
+            .iter()
+            .enumerate()
+            .map(|(idx, equipo)| {
+                let clasificado = global.esta_clasificado(equipo);
+                let clasificado_txt = if clasificado { "Sí" } else { "No" };
+                let evento_detectado_celda = Rc::clone(&evento_detectado);
+
+                PropiedadesFila {
+                    datos: vec![
+                        PropiedadesCelda {
+                            texto: crear_texto(equipo.get_nombre(), 22.0, Color32::BLACK, false),
+                            fondo_rgb: None,
+                            evento: None,
+                        },
+                        PropiedadesCelda {
+                            texto: crear_texto(equipo.get_codigo(), 22.0, Color32::BLACK, false),
+                            fondo_rgb: None,
+                            evento: None,
+                        },
+                        PropiedadesCelda {
+                            texto: crear_texto(clasificado_txt, 22.0, Color32::BLACK, false),
+                            fondo_rgb: None,
+                            evento: Some(Box::new(move || {
+                                *evento_detectado_celda.borrow_mut() = Some(EventoSeleccionClasificados::AgregarOQuitarEquipoClasificado(idx, !clasificado));
+                            })),
+                        }
+                    ],
+                    altura: 30.0,
+                }
+            })
+            .collect();
+        
+        let altura_maxima = ui.available_height() - ALTURA_BOTON_PREDETERMINADA - MARGEN_VERTICAL_TABLA - 5.0;
+        
+        agregar_tabla(ui, &[3, 2, 1], &encabezado, &mut filas, altura_maxima);
+
+        if let Some(evento) = evento_detectado.borrow_mut().take() {
+            if proximo_evento.is_none() {
+                *proximo_evento = Some(evento);
+            }
         }
-    });
+    }
+
+    fn render_label_seleccionados(&self, ui: &mut egui::Ui, cantidad: usize, total: usize) {
+        ui.vertical_centered(|ui| {
+            let texto = crear_texto(
+                format!("Cantidad seleccionados: {cantidad} / {total}"),
+                20.0,
+                Color32::BLACK,
+                false
+            );
+
+            ui.label(texto);
+        });
+    }
+
+    fn render_boton_atras(&self, ui: &mut egui::Ui, proximo_evento: &mut Option<EventoSeleccionClasificados>) {
+        let cfg = propiedades_boton_atras(true, None);
+        
+        agregar_boton(ui, cfg, || {
+            if proximo_evento.is_none() {
+                *proximo_evento = Some(EventoSeleccionClasificados::IrAMenuPrincipal)
+            }
+        });
+    }
+
+    fn render_boton_siguiente(
+        &self,
+        ui: &mut egui::Ui,
+        cantidad: usize,
+        total: usize,
+        proximo_evento: &mut Option<EventoSeleccionClasificados>,
+    ) {
+        let cfg = propiedades_boton_siguiente(cantidad == total, None);
+        
+        agregar_boton(ui, cfg, || {
+            if proximo_evento.is_none() {
+                *proximo_evento = Some(EventoSeleccionClasificados::IrAMuestraClasificados)
+            }
+        });
+    }
 }
