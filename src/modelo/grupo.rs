@@ -9,7 +9,7 @@ impl Grupo {
     pub fn try_new(id: usize, equipos: Vec<EquipoParticipanteRef>) -> Result<Self, String> {
         let num_equipos = equipos.len();
         if num_equipos < 3 {
-            return Err("El equipo debe tener al menos 3 participantes".to_string());
+            return Err("El grupo debe tener al menos 3 participantes".to_string());
         }
 
         let mut bombo = 1;
