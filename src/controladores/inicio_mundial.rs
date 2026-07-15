@@ -1,8 +1,9 @@
-use std::any::TypeId;
-use eframe::egui;
+use crate::ModeloSimulador;
 use crate::eventos::{EventoGlobal, EventoInicioMundial};
+use crate::mvc::{Controlador, Ventana};
 use crate::ventanas::{InicioMundial, MenuPrincipal};
-use crate::{Controlador, ModeloSimulador, Ventana};
+use eframe::egui;
+use std::any::TypeId;
 
 impl Controlador for InicioMundial {
     fn actualizar(&mut self, ui: &mut egui::Ui, modelo: &mut ModeloSimulador) -> EventoGlobal {
@@ -13,7 +14,7 @@ impl Controlador for InicioMundial {
                 EventoInicioMundial::EmpezarSimulacion => todo!(),
                 EventoInicioMundial::VolverAlMenuPrincipal => {
                     return EventoGlobal::CambiarDeVista(TypeId::of::<MenuPrincipal>());
-                },
+                }
             }
         }
 

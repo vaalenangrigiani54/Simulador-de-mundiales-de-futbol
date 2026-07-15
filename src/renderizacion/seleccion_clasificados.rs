@@ -1,13 +1,16 @@
-use std::cell::RefCell;
-use std::rc::Rc;
-
-use eframe::egui::{self, Color32};
 use crate::eventos::EventoSeleccionClasificados;
-use crate::templates::boton::{ALTURA_BOTON_PREDETERMINADA, agregar_boton, propiedades_boton_atras, propiedades_boton_siguiente};
+use crate::mvc::Ventana;
+use crate::templates::boton::{
+    ALTURA_BOTON_PREDETERMINADA, agregar_boton, propiedades_boton_atras,
+    propiedades_boton_siguiente,
+};
 use crate::templates::tabla::{PropiedadesCelda, PropiedadesFila, agregar_tabla};
 use crate::templates::texto::crear_texto;
 use crate::ventanas::SeleccionClasificados;
-use crate::{EquipoInfo, ModeloSimulador, Ventana};
+use crate::{EquipoInfo, ModeloSimulador};
+use eframe::egui::{self, Color32};
+use std::cell::RefCell;
+use std::rc::Rc;
 
 const MARGEN_VERTICAL_TABLA: f32 = 25.0;
 
@@ -24,12 +27,17 @@ impl Ventana for SeleccionClasificados {
 
         self.render_tabla_equipos(ui, global, &mut proximo_evento);
         ui.add_space(MARGEN_VERTICAL_TABLA);
-        
+
         ui.columns(3, |columns| {
             let cantidad = global.cantidad_clasificados();
             self.render_boton_atras(&mut columns[0], &mut proximo_evento);
             self.render_label_seleccionados(&mut columns[1], cantidad, global.cant_participantes);
-            self.render_boton_siguiente(&mut columns[2], cantidad, global.cant_participantes, &mut proximo_evento);
+            self.render_boton_siguiente(
+                &mut columns[2],
+                cantidad,
+                global.cant_participantes,
+                &mut proximo_evento,
+            );
         });
 
         proximo_evento
@@ -38,12 +46,7 @@ impl Ventana for SeleccionClasificados {
 
 impl SeleccionClasificados {
     fn render_titulo(&self, ui: &mut egui::Ui) {
-        let texto = crear_texto(
-            "SELECCIONAR A LOS CLASIFICADOS",
-            50.0,
-            Color32::BLACK,
-            true,
-        );
+        let texto = crear_texto("SELECCIONAR A LOS CLASIFICADOS", 50.0, Color32::BLACK, true);
 
         ui.vertical_centered(|ui| ui.heading(texto));
     }
@@ -52,7 +55,7 @@ impl SeleccionClasificados {
         &self,
         ui: &mut egui::Ui,
         global: &ModeloSimulador,
-        proximo_evento: &mut Option<EventoSeleccionClasificados>
+        proximo_evento: &mut Option<EventoSeleccionClasificados>,
     ) {
         let encabezado = PropiedadesFila {
             datos: vec![
@@ -70,13 +73,14 @@ impl SeleccionClasificados {
                     texto: crear_texto("Clasificado", 30.0, Color32::BLACK, true),
                     fondo_rgb: None,
                     evento: None,
-                }
+                },
             ],
             altura: 40.0,
         };
 
         let evento_detectado = Rc::new(RefCell::new(None));
-        let mut filas: Vec<PropiedadesFila> = global.get_equipos_disponibles()
+        let mut filas: Vec<PropiedadesFila> = global
+            .get_equipos_disponibles()
             .iter()
             .enumerate()
             .map(|(idx, equipo)| {
@@ -100,17 +104,23 @@ impl SeleccionClasificados {
                             texto: crear_texto(clasificado_txt, 22.0, Color32::BLACK, false),
                             fondo_rgb: None,
                             evento: Some(Box::new(move || {
-                                *evento_detectado_celda.borrow_mut() = Some(EventoSeleccionClasificados::AgregarOQuitarEquipoClasificado(idx, !clasificado));
+                                *evento_detectado_celda.borrow_mut() = Some(
+                                    EventoSeleccionClasificados::AgregarOQuitarEquipoClasificado(
+                                        idx,
+                                        !clasificado,
+                                    ),
+                                );
                             })),
-                        }
+                        },
                     ],
                     altura: 30.0,
                 }
             })
             .collect();
-        
-        let altura_maxima = ui.available_height() - ALTURA_BOTON_PREDETERMINADA - MARGEN_VERTICAL_TABLA - 5.0;
-        
+
+        let altura_maxima =
+            ui.available_height() - ALTURA_BOTON_PREDETERMINADA - MARGEN_VERTICAL_TABLA - 5.0;
+
         agregar_tabla(ui, &[3, 2, 1], &encabezado, &mut filas, altura_maxima);
 
         if let Some(evento) = evento_detectado.borrow_mut().take() {
@@ -126,16 +136,20 @@ impl SeleccionClasificados {
                 format!("Cantidad seleccionados: {cantidad} / {total}"),
                 20.0,
                 Color32::BLACK,
-                false
+                false,
             );
 
             ui.label(texto);
         });
     }
 
-    fn render_boton_atras(&self, ui: &mut egui::Ui, proximo_evento: &mut Option<EventoSeleccionClasificados>) {
+    fn render_boton_atras(
+        &self,
+        ui: &mut egui::Ui,
+        proximo_evento: &mut Option<EventoSeleccionClasificados>,
+    ) {
         let cfg = propiedades_boton_atras(true, None);
-        
+
         agregar_boton(ui, cfg, || {
             if proximo_evento.is_none() {
                 *proximo_evento = Some(EventoSeleccionClasificados::IrAMenuPrincipal)
@@ -151,7 +165,7 @@ impl SeleccionClasificados {
         proximo_evento: &mut Option<EventoSeleccionClasificados>,
     ) {
         let cfg = propiedades_boton_siguiente(cantidad == total, None);
-        
+
         agregar_boton(ui, cfg, || {
             if proximo_evento.is_none() {
                 *proximo_evento = Some(EventoSeleccionClasificados::IrAMuestraClasificados)

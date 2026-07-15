@@ -1,14 +1,16 @@
 use std::collections::BTreeSet;
 
 use crate::eventos::EventoMuestraClasificados;
+use crate::mvc::Ventana;
 use crate::templates::boton::{
-    ALTURA_BOTON_PREDETERMINADA, agregar_boton, propiedades_boton_atras, propiedades_boton_siguiente,
+    ALTURA_BOTON_PREDETERMINADA, agregar_boton, propiedades_boton_atras,
+    propiedades_boton_siguiente,
 };
 use crate::templates::popup::{ResultadoPopUp, popup_confirmacion};
 use crate::templates::tabla::{PropiedadesCelda, PropiedadesFila, agregar_tabla};
 use crate::templates::texto::crear_texto;
 use crate::ventanas::MuestraClasificados;
-use crate::{EquipoInfo, EquipoParticipanteRef, ModeloSimulador, Ventana};
+use crate::{EquipoInfo, EquipoParticipanteRef, ModeloSimulador};
 use eframe::egui::{self, Color32};
 
 const MARGEN_VERTICAL_TABLA: f32 = 25.0;
@@ -52,7 +54,11 @@ impl MuestraClasificados {
         ui.vertical_centered(|ui| ui.heading(texto));
     }
 
-    fn render_tabla_clasificados(&self, ui: &mut egui::Ui, clasificados: &BTreeSet<EquipoParticipanteRef>) {
+    fn render_tabla_clasificados(
+        &self,
+        ui: &mut egui::Ui,
+        clasificados: &BTreeSet<EquipoParticipanteRef>,
+    ) {
         let encabezado = PropiedadesFila {
             datos: vec![
                 PropiedadesCelda {
@@ -64,7 +70,7 @@ impl MuestraClasificados {
                     texto: crear_texto("Código FIFA", 30.0, Color32::BLACK, true),
                     fondo_rgb: None,
                     evento: None,
-                }
+                },
             ],
             altura: 40.0,
         };
@@ -85,7 +91,7 @@ impl MuestraClasificados {
                             texto: crear_texto(equipo.get_codigo(), 22.0, Color32::BLACK, false),
                             fondo_rgb: None,
                             evento: None,
-                        }
+                        },
                     ],
                     altura: 30.0,
                 }
@@ -98,7 +104,11 @@ impl MuestraClasificados {
         agregar_tabla(ui, &[1, 1], &encabezado, &mut filas, altura_maxima);
     }
 
-    fn render_boton_atras(&self, ui: &mut egui::Ui, proximo_evento: &mut Option<EventoMuestraClasificados>) {
+    fn render_boton_atras(
+        &self,
+        ui: &mut egui::Ui,
+        proximo_evento: &mut Option<EventoMuestraClasificados>,
+    ) {
         let cfg = propiedades_boton_atras(true, None);
 
         agregar_boton(ui, cfg, || {
@@ -125,12 +135,16 @@ impl MuestraClasificados {
             && let Some(resultado) = popup_confirmacion(
                 ui.ctx(),
                 "Conformación de grupos",
-                "¿Desea configurar los grupos manualmente?"
+                "¿Desea configurar los grupos manualmente?",
             )
         {
             match resultado {
-                ResultadoPopUp::Afirmativo => *proximo_evento = Some(EventoMuestraClasificados::IrAEditarGrupos),
-                ResultadoPopUp::Negativo => *proximo_evento = Some(EventoMuestraClasificados::IrAInicioDelMundial),
+                ResultadoPopUp::Afirmativo => {
+                    *proximo_evento = Some(EventoMuestraClasificados::IrAEditarGrupos)
+                }
+                ResultadoPopUp::Negativo => {
+                    *proximo_evento = Some(EventoMuestraClasificados::IrAInicioDelMundial)
+                }
                 _ => {}
             }
 

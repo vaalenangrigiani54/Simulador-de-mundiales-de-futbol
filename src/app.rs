@@ -1,6 +1,7 @@
+use crate::ModeloSimulador;
 use crate::eventos::EventoGlobal;
+use crate::mvc::ControladorObj;
 use crate::ventanas::*;
-use crate::{ControladorObj, ModeloSimulador};
 use eframe::egui::{CentralPanel, Context, Frame, Pos2, Ui, Vec2, ViewportCommand};
 use std::any::TypeId;
 
@@ -44,7 +45,7 @@ impl AppSimulador {
             self.vista_actual = ControladorObj::new::<MuestraClasificados>();
         } else if nueva_vista == TypeId::of::<InicioMundial>() {
             self.vista_actual = ControladorObj::new::<InicioMundial>();
-        }else {
+        } else {
             panic!("Tipo de vista no reconocido.")
         }
     }

@@ -6,7 +6,7 @@ pub struct PropiedadesBoton {
     pub texto: RichText,
     pub dimensiones: Vec2,
     pub fondo_rgb: (u8, u8, u8),
-    pub habilitado: bool
+    pub habilitado: bool,
 }
 
 /// Altura por defecto (en píxeles) de un botón.
@@ -28,9 +28,12 @@ pub fn agregar_boton(ui: &mut egui::Ui, cfg: PropiedadesBoton, on_click: impl Fn
 }
 
 /// Devuelve las propiedades del botón para ir para atrás en el programa.
-pub fn propiedades_boton_atras(habilitado: bool, sobreescribir_texto: Option<&str>) -> PropiedadesBoton {
+pub fn propiedades_boton_atras(
+    habilitado: bool,
+    sobreescribir_texto: Option<&str>,
+) -> PropiedadesBoton {
     let texto_str = sobreescribir_texto.unwrap_or("Atrás");
-    
+
     PropiedadesBoton {
         texto: crear_texto(texto_str, 25.0, Color32::BLACK, true),
         dimensiones: Vec2 {
@@ -38,14 +41,17 @@ pub fn propiedades_boton_atras(habilitado: bool, sobreescribir_texto: Option<&st
             y: ALTURA_BOTON_PREDETERMINADA,
         },
         fondo_rgb: (255, 200, 200),
-        habilitado
+        habilitado,
     }
 }
 
 /// Devuelve las propiedades del botón para volver al menú principal.
-pub fn propiedades_boton_menu(habilitado: bool, sobreescribir_texto: Option<&str>) -> PropiedadesBoton {
+pub fn propiedades_boton_menu(
+    habilitado: bool,
+    sobreescribir_texto: Option<&str>,
+) -> PropiedadesBoton {
     let texto_str = sobreescribir_texto.unwrap_or("Menú principal");
-    
+
     PropiedadesBoton {
         texto: crear_texto(texto_str, 25.0, Color32::BLACK, true),
         dimensiones: Vec2 {
@@ -53,14 +59,17 @@ pub fn propiedades_boton_menu(habilitado: bool, sobreescribir_texto: Option<&str
             y: ALTURA_BOTON_PREDETERMINADA,
         },
         fondo_rgb: (255, 255, 200),
-        habilitado
+        habilitado,
     }
 }
 
 /// Devuelve las propiedades del botón para ir para adelante en el programa.
-pub fn propiedades_boton_siguiente(habilitado: bool, sobreescribir_texto: Option<&str>) -> PropiedadesBoton {
+pub fn propiedades_boton_siguiente(
+    habilitado: bool,
+    sobreescribir_texto: Option<&str>,
+) -> PropiedadesBoton {
     let texto_str = sobreescribir_texto.unwrap_or("Siguiente");
-    
+
     PropiedadesBoton {
         texto: crear_texto(texto_str, 25.0, Color32::BLACK, true),
         dimensiones: Vec2 {
@@ -68,6 +77,6 @@ pub fn propiedades_boton_siguiente(habilitado: bool, sobreescribir_texto: Option
             y: ALTURA_BOTON_PREDETERMINADA,
         },
         fondo_rgb: (200, 255, 200),
-        habilitado
+        habilitado,
     }
 }

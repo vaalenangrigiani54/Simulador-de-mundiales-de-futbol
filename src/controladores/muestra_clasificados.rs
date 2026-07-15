@@ -1,6 +1,7 @@
 use crate::eventos::{EventoGlobal, EventoMuestraClasificados};
+use crate::mvc::{Controlador, Ventana};
 use crate::ventanas::{InicioMundial, MuestraClasificados, SeleccionClasificados};
-use crate::{Controlador, EquipoParticipanteRef, Grupo, ModeloSimulador, Ventana};
+use crate::{EquipoParticipanteRef, Grupo, ModeloSimulador};
 use eframe::egui;
 use rand::seq::SliceRandom;
 use std::any::TypeId;
@@ -11,15 +12,17 @@ impl Controlador for MuestraClasificados {
     fn actualizar(&mut self, ui: &mut egui::Ui, modelo: &mut ModeloSimulador) -> EventoGlobal {
         modelo.grupos.take();
         modelo.mundial.take();
-        
+
         if let Some(evento) = self.renderizar(ui, modelo) {
             match evento {
                 EventoMuestraClasificados::IrAInicioDelMundial => {
                     modelo.grupos = Some(sortear_grupos(modelo));
                     return EventoGlobal::CambiarDeVista(TypeId::of::<InicioMundial>());
-                },
+                }
                 EventoMuestraClasificados::IrAEditarGrupos => todo!(),
-                EventoMuestraClasificados::IrASeleccionarEquiposClasificados => return EventoGlobal::CambiarDeVista(TypeId::of::<SeleccionClasificados>()),
+                EventoMuestraClasificados::IrASeleccionarEquiposClasificados => {
+                    return EventoGlobal::CambiarDeVista(TypeId::of::<SeleccionClasificados>());
+                }
             }
         }
 
@@ -34,11 +37,10 @@ fn sortear_grupos(modelo: &ModeloSimulador) -> Vec<Grupo> {
         .expect("No se definió la lista de clasificados");
 
     let mut rng = rand::rng();
-    let mut equipos: Vec<EquipoParticipanteRef> = equipos.iter()
-        .map(|equipo| equipo.clone())
-        .collect();
+    let mut equipos: Vec<EquipoParticipanteRef> =
+        equipos.iter().map(|equipo| equipo.clone()).collect();
     equipos.shuffle(&mut rng);
-    
+
     let mut grupos = Vec::with_capacity(equipos.len() / EQUIPOS_POR_GRUPO);
     let mut equipos = equipos.into_iter().peekable();
     let mut id = 0;
@@ -57,13 +59,13 @@ fn sortear_grupos(modelo: &ModeloSimulador) -> Vec<Grupo> {
 
             grupo_vec.push(equipo);
         }
-        
+
         match Grupo::try_new(id, grupo_vec) {
             Ok(grupo) => {
                 grupos.push(grupo);
                 id += 1;
-            },
-            Err(e) => eprintln!("ERROR: {e}")
+            }
+            Err(e) => eprintln!("ERROR: {e}"),
         }
     }
 

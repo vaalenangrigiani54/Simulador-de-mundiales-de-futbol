@@ -1,6 +1,7 @@
 use crate::eventos::{EventoGlobal, EventoMenuPrincipal};
+use crate::mvc::{Controlador, Ventana};
 use crate::ventanas::{MenuPrincipal, MuestraClasificados, SeleccionClasificados};
-use crate::{Controlador, Equipo, EquipoParticipanteRef, ModeloSimulador, Ventana};
+use crate::{Equipo, EquipoParticipanteRef, ModeloSimulador};
 use eframe::egui;
 use rand::seq::SliceRandom;
 use std::any::TypeId;
@@ -11,13 +12,15 @@ impl Controlador for MenuPrincipal {
         modelo.clasificados.take();
         modelo.grupos.take();
         modelo.mundial.take();
-        
+
         if let Some(evento) = self.renderizar(ui, modelo) {
             match evento {
                 EventoMenuPrincipal::EstablecerCantidadDeEquipos(cantidad) => {
                     modelo.cant_participantes = cantidad
                 }
-                EventoMenuPrincipal::IrASeleccionarEquiposClasificados => return EventoGlobal::CambiarDeVista(TypeId::of::<SeleccionClasificados>()),
+                EventoMenuPrincipal::IrASeleccionarEquiposClasificados => {
+                    return EventoGlobal::CambiarDeVista(TypeId::of::<SeleccionClasificados>());
+                }
                 EventoMenuPrincipal::ClasificacionAleatoria => {
                     let disponibles = modelo.get_equipos_disponibles();
                     modelo.clasificados = Some(elegir_clasificados_aleatoriamente(

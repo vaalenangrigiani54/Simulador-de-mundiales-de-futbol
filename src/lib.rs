@@ -1,13 +1,15 @@
 pub mod app;
+pub mod common;
 pub mod config;
 pub mod controladores;
-pub mod eventos;
 pub mod modelo;
-pub mod mvc;
+pub mod renderizacion;
 pub mod templates;
-pub mod vistas;
 
-pub use mvc::{Controlador, ControladorObj, Ventana};
+pub use common::{
+    eventos, mvc,
+    ventanas::{self, VentanaInfo},
+};
 
 pub use modelo::{
     equipo::{
@@ -31,5 +33,3 @@ pub use modelo::{
     },
     resultados::ResultadoEquipo,
 };
-
-pub use vistas::ventanas::{self, VentanaInfo};

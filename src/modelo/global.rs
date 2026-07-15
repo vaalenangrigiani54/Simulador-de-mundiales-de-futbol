@@ -1,5 +1,5 @@
-use std::collections::BTreeSet;
 use crate::{Equipo, EquipoParticipanteRef, Grupo, Mundial};
+use std::collections::BTreeSet;
 
 /// Estructura principal del modelo global.
 pub struct ModeloSimulador {

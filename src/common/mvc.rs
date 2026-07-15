@@ -1,6 +1,6 @@
+use crate::ModeloSimulador;
 use crate::eventos::EventoGlobal;
-use crate::ventanas::MenuPrincipal;
-use crate::{ModeloSimulador, VentanaInfo};
+use crate::ventanas::{MenuPrincipal, VentanaInfo};
 use eframe::egui::Ui;
 use std::ops::{Deref, DerefMut};
 

@@ -1,4 +1,7 @@
-use eframe::egui::{self, Align2, Area, Color32, Context, CornerRadius, Frame, Id, Margin, Order, Sense, Stroke, Window};
+use eframe::egui::{
+    self, Align2, Area, Color32, Context, CornerRadius, Frame, Id, Margin, Order, Sense, Stroke,
+    Window,
+};
 
 /// Posibles resultados de una ventana emergente.
 pub enum ResultadoPopUp {
@@ -6,22 +9,18 @@ pub enum ResultadoPopUp {
     Negativo,
 
     /// El usuario no se decidió o cerró la ventana emergente.
-    Nada
+    Nada,
 }
 
 /// Muestra una ventana de confirmación personalizada.
-/// 
+///
 /// # Devuelve
 /// - `Some(true)` si el usuario presionó el botón de afirmación.
 /// - `Some(false)` si el usuario presionó el botón de afirmación.
 /// - `None` en cualquier otro caso.
-pub fn popup_confirmacion(
-    ctx: &Context,
-    titulo: &str,
-    mensaje: &str,
-) -> Option<ResultadoPopUp> {
+pub fn popup_confirmacion(ctx: &Context, titulo: &str, mensaje: &str) -> Option<ResultadoPopUp> {
     let screen_rect = ctx.content_rect();
-    
+
     // Variable mutable para capturar el clic de este frame
     let mut resultado = None;
 
@@ -50,19 +49,31 @@ pub fn popup_confirmacion(
         .show(ctx, |ui| {
             let mut frame = Frame::window(ui.style());
             frame.inner_margin = Margin::same(15);
-            
+
             frame.show(ui, |ui| {
                 // Dibujar el efecto biselado personalizado
                 let rect = ui.max_rect();
                 let painter = ui.painter();
-                
+
                 // Bisel superior/izquierdo (Luz)
-                painter.line_segment([rect.left_bottom(), rect.left_top()], Stroke::new(1.5, Color32::from_white_alpha(50)));
-                painter.line_segment([rect.left_top(), rect.right_top()], Stroke::new(1.5, Color32::from_white_alpha(50)));
-                
+                painter.line_segment(
+                    [rect.left_bottom(), rect.left_top()],
+                    Stroke::new(1.5, Color32::from_white_alpha(50)),
+                );
+                painter.line_segment(
+                    [rect.left_top(), rect.right_top()],
+                    Stroke::new(1.5, Color32::from_white_alpha(50)),
+                );
+
                 // Bisel inferior/derecho (Sombra)
-                painter.line_segment([rect.right_top(), rect.right_bottom()], Stroke::new(1.5, Color32::from_black_alpha(160)));
-                painter.line_segment([rect.right_bottom(), rect.left_bottom()], Stroke::new(1.5, Color32::from_black_alpha(160)));
+                painter.line_segment(
+                    [rect.right_top(), rect.right_bottom()],
+                    Stroke::new(1.5, Color32::from_black_alpha(160)),
+                );
+                painter.line_segment(
+                    [rect.right_bottom(), rect.left_bottom()],
+                    Stroke::new(1.5, Color32::from_black_alpha(160)),
+                );
 
                 // Contenido del popup
                 ui.vertical_centered(|ui| {
@@ -85,6 +96,6 @@ pub fn popup_confirmacion(
                 });
             });
         });
-    
+
     resultado
 }

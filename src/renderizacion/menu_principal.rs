@@ -1,9 +1,10 @@
+use crate::ModeloSimulador;
 use crate::eventos::EventoMenuPrincipal;
+use crate::mvc::Ventana;
 use crate::templates::boton::*;
 use crate::templates::popup::{ResultadoPopUp, popup_confirmacion};
 use crate::templates::texto::crear_texto;
 use crate::ventanas::MenuPrincipal;
-use crate::{ModeloSimulador, Ventana};
 use eframe::egui::{self, Color32, Vec2};
 
 impl Ventana for MenuPrincipal {
@@ -55,7 +56,7 @@ impl MenuPrincipal {
                     y: 35.0,
                 },
                 fondo_rgb: (255, 255, 200),
-                habilitado: true
+                habilitado: true,
             },
             || {
                 if proximo_evento.is_none() {
@@ -86,7 +87,7 @@ impl MenuPrincipal {
                     y: 35.0,
                 },
                 fondo_rgb: (255, 200, 255),
-                habilitado: true
+                habilitado: true,
             },
             || {
                 if proximo_evento.is_none() {
@@ -96,7 +97,11 @@ impl MenuPrincipal {
         );
     }
 
-    fn render_boton_salir(&mut self, ui: &mut egui::Ui, proximo_evento: &mut Option<EventoMenuPrincipal>) {
+    fn render_boton_salir(
+        &mut self,
+        ui: &mut egui::Ui,
+        proximo_evento: &mut Option<EventoMenuPrincipal>,
+    ) {
         let texto = crear_texto("Salir", 28.0, Color32::BLACK, false);
 
         agregar_boton(
@@ -108,7 +113,7 @@ impl MenuPrincipal {
                     y: 35.0,
                 },
                 fondo_rgb: (255, 200, 200),
-                habilitado: true
+                habilitado: true,
             },
             || {
                 if proximo_evento.is_none() {
@@ -121,7 +126,7 @@ impl MenuPrincipal {
             && let Some(respuesta) = popup_confirmacion(
                 ui.ctx(),
                 "Simulador de mundiales de fútbol",
-                "¿Está seguro que desea salir?"
+                "¿Está seguro que desea salir?",
             )
         {
             match respuesta {
