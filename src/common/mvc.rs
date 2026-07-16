@@ -1,6 +1,5 @@
-use crate::ModeloSimulador;
 use crate::eventos::EventoGlobal;
-use crate::ventanas::{MenuPrincipal, VentanaInfo};
+use crate::{ModeloSimulador, VentanaInfo};
 use eframe::egui::Ui;
 use std::ops::{Deref, DerefMut};
 
@@ -28,12 +27,6 @@ pub struct ControladorObj(Box<dyn Controlador>);
 impl ControladorObj {
     pub fn new<V: Controlador + Ventana + Default + 'static>() -> Self {
         Self(Box::new(V::default()))
-    }
-}
-
-impl Default for ControladorObj {
-    fn default() -> Self {
-        Self::new::<MenuPrincipal>()
     }
 }
 

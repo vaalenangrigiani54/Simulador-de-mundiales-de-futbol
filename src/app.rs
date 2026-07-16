@@ -2,13 +2,21 @@ use crate::ModeloSimulador;
 use crate::eventos::EventoGlobal;
 use crate::mvc::ControladorObj;
 use crate::ventanas::*;
-use eframe::egui::{CentralPanel, Context, Frame, Pos2, Ui, Vec2, ViewportCommand};
+use eframe::egui::{self, CentralPanel, Context, Frame, Ui, Vec2, ViewportCommand};
 use std::any::TypeId;
 
-#[derive(Default)]
 pub struct AppSimulador {
     vista_actual: ControladorObj,
-    modelo: ModeloSimulador,
+    modelo: Result<ModeloSimulador, String>,
+}
+
+impl Default for AppSimulador {
+    fn default() -> Self {
+        Self {
+            vista_actual: ControladorObj::new::<MenuPrincipal>(),
+            modelo: ModeloSimulador::try_new()
+        }
+    }
 }
 
 impl eframe::App for AppSimulador {
@@ -26,11 +34,16 @@ impl eframe::App for AppSimulador {
                     .inner_margin(self.vista_actual.margen_exterior()),
             )
             .show_inside(ui, |ui| {
-                match self.vista_actual.actualizar(ui, &mut self.modelo) {
-                    EventoGlobal::CambiarDeVista(type_id) => self.cambiar_de_vista(type_id),
-                    EventoGlobal::Salir => self.salir_del_programa(ui.ctx()),
-                    _ => {}
-                }
+                match &mut self.modelo {
+                    Ok(modelo) => {
+                        match self.vista_actual.actualizar(ui, modelo) {
+                            EventoGlobal::CambiarDeVista(type_id) => self.cambiar_de_vista(type_id),
+                            EventoGlobal::Salir => Self::salir_del_programa(ui.ctx()),
+                            _ => {}
+                        }
+                    },
+                    Err(e) => Self::mostrar_error(e)
+                }                
             });
     }
 }
@@ -50,7 +63,11 @@ impl AppSimulador {
         }
     }
 
-    fn salir_del_programa(&self, ctx: &Context) {
+    fn mostrar_error(e: impl AsRef<str>) {
+        panic!("ERROR: {}", e.as_ref());
+    }
+
+    fn salir_del_programa(ctx: &Context) {
         ctx.send_viewport_cmd(ViewportCommand::Close);
     }
 }
@@ -66,7 +83,7 @@ fn centrar_ventana(ctx: &Context, dimensiones: Vec2) {
         let centro_x = (monitor_size.x / 2.0) - (dimensiones.x / 2.0);
         let centro_y = (monitor_size.y / 2.0) - (dimensiones.y / 2.0);
 
-        let posicion_centrada = Pos2::new(centro_x, centro_y);
+        let posicion_centrada = egui::pos2(centro_x, centro_y);
         ctx.send_viewport_cmd(ViewportCommand::OuterPosition(posicion_centrada));
     }
 }

@@ -58,7 +58,7 @@ mod test {
 
     #[test]
     fn test_clasificacion_aleatoria() {
-        let simulador = ModeloSimulador::default();
+        let simulador = ModeloSimulador::try_new().expect("No se pudo inicializar el modelo global");
         let afiliados_fifa = simulador.get_equipos_disponibles();
 
         let cantidad = 32;
