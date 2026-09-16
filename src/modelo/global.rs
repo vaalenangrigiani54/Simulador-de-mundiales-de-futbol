@@ -58,7 +58,7 @@ impl ModeloSimulador {
 }
 
 fn inicializar_afiliados_fifa() -> Result<Vec<Equipo>, String> {
-    let archivo = File::open("../assets/equipos.csv")
+    let archivo = File::open("assets/equipos.csv")
         .map_err(|e| format!("No se pudo cargar la lista de equipos afiliados a la FIFA: {e}"))?;
     
     let reader = BufReader::new(archivo);
