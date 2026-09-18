@@ -1,9 +1,8 @@
 use crate::eventos::{EventoGlobal, EventoSeleccionClasificados};
 use crate::mvc::{Controlador, Ventana};
-use crate::ventanas::{MenuPrincipal, MuestraClasificados, SeleccionClasificados};
+use crate::ventanas::SeleccionClasificados;
 use crate::{EquipoParticipanteRef, ModeloSimulador};
 use eframe::egui;
-use std::any::TypeId;
 use std::collections::BTreeSet;
 
 impl Controlador for SeleccionClasificados {
@@ -30,12 +29,8 @@ impl Controlador for SeleccionClasificados {
                         }
                     }
                 }
-                EventoSeleccionClasificados::IrAMenuPrincipal => {
-                    return EventoGlobal::CambiarDeVista(TypeId::of::<MenuPrincipal>());
-                }
-                EventoSeleccionClasificados::IrAMuestraClasificados => {
-                    return EventoGlobal::CambiarDeVista(TypeId::of::<MuestraClasificados>());
-                }
+                EventoSeleccionClasificados::IrAMenuPrincipal => return EventoGlobal::CambiarDeVistaAMenuPrincipal,
+                EventoSeleccionClasificados::IrAMuestraClasificados => return EventoGlobal::CambiarDeVistaAMuestraClasificados,
             }
         }
 

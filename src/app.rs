@@ -1,9 +1,7 @@
 use crate::ModeloSimulador;
 use crate::eventos::EventoGlobal;
 use crate::mvc::ControladorObj;
-use crate::ventanas::*;
 use eframe::egui::{self, CentralPanel, Context, Frame, Ui, Vec2, ViewportCommand};
-use std::any::TypeId;
 
 pub struct AppSimulador {
     vista_actual: ControladorObj,
@@ -13,7 +11,7 @@ pub struct AppSimulador {
 impl Default for AppSimulador {
     fn default() -> Self {
         Self {
-            vista_actual: ControladorObj::new::<MenuPrincipal>(),
+            vista_actual: ControladorObj::new_menu_principal(),
             modelo: ModeloSimulador::try_new()
         }
     }
@@ -37,39 +35,27 @@ impl eframe::App for AppSimulador {
                 match &mut self.modelo {
                     Ok(modelo) => {
                         match self.vista_actual.actualizar(ui, modelo) {
-                            EventoGlobal::CambiarDeVista(type_id) => self.cambiar_de_vista(type_id),
-                            EventoGlobal::Salir => Self::salir_del_programa(ui.ctx()),
+                            EventoGlobal::CambiarDeVistaAMenuPrincipal => self.vista_actual = ControladorObj::new_menu_principal(),
+                            EventoGlobal::CambiarDeVistaASeleccionClasificados => self.vista_actual = ControladorObj::new_seleccion_clasificados(),
+                            EventoGlobal::CambiarDeVistaAMuestraClasificados => self.vista_actual = ControladorObj::new_muestra_clasificados(),
+                            EventoGlobal::CambiarDeVistaAInicioMundial => self.vista_actual = ControladorObj::new_inicio_mundial(),
+                            EventoGlobal::CambiarDeVistaAInfoGrupos{ modo, idx_grupo } => self.vista_actual = ControladorObj::new_info_grupos(modo, idx_grupo),
+                            EventoGlobal::Salir => salir_del_programa(ui.ctx()),
                             _ => {}
                         }
                     },
-                    Err(e) => Self::mostrar_error(e)
+                    Err(e) => mostrar_error(e)
                 }                
             });
     }
 }
 
-impl AppSimulador {
-    fn cambiar_de_vista(&mut self, nueva_vista: TypeId) {
-        if nueva_vista == TypeId::of::<MenuPrincipal>() {
-            self.vista_actual = ControladorObj::new::<MenuPrincipal>();
-        } else if nueva_vista == TypeId::of::<SeleccionClasificados>() {
-            self.vista_actual = ControladorObj::new::<SeleccionClasificados>();
-        } else if nueva_vista == TypeId::of::<MuestraClasificados>() {
-            self.vista_actual = ControladorObj::new::<MuestraClasificados>();
-        } else if nueva_vista == TypeId::of::<InicioMundial>() {
-            self.vista_actual = ControladorObj::new::<InicioMundial>();
-        } else {
-            panic!("Tipo de vista no reconocido.")
-        }
-    }
+fn mostrar_error(e: impl AsRef<str>) {
+    panic!("ERROR: {}", e.as_ref());
+}
 
-    fn mostrar_error(e: impl AsRef<str>) {
-        panic!("ERROR: {}", e.as_ref());
-    }
-
-    fn salir_del_programa(ctx: &Context) {
-        ctx.send_viewport_cmd(ViewportCommand::Close);
-    }
+fn salir_del_programa(ctx: &Context) {
+    ctx.send_viewport_cmd(ViewportCommand::Close);
 }
 
 /// Cambia el tamaño de la ventana de manera dinámica.

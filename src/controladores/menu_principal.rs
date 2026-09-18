@@ -19,7 +19,7 @@ impl Controlador for MenuPrincipal {
                     modelo.cant_participantes = cantidad
                 }
                 EventoMenuPrincipal::IrASeleccionarEquiposClasificados => {
-                    return EventoGlobal::CambiarDeVista(TypeId::of::<SeleccionClasificados>());
+                    return EventoGlobal::CambiarDeVistaASeleccionClasificados;
                 }
                 EventoMenuPrincipal::ClasificacionAleatoria => {
                     let disponibles = modelo.get_equipos_disponibles();
@@ -27,7 +27,7 @@ impl Controlador for MenuPrincipal {
                         modelo.cant_participantes,
                         disponibles,
                     ));
-                    return EventoGlobal::CambiarDeVista(TypeId::of::<MuestraClasificados>());
+                    return EventoGlobal::CambiarDeVistaAMuestraClasificados;
                 }
                 EventoMenuPrincipal::Salir => return EventoGlobal::Salir,
             }

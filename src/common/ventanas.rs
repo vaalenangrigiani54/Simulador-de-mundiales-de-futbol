@@ -17,6 +17,10 @@ pub trait VentanaInfo {
     }
 }
 
+/*============================================================================*/
+/*--------------------------------- VENTANAS ---------------------------------*/
+/*============================================================================*/
+
 #[derive(Default)]
 pub struct MenuPrincipal {
     pub(crate) mostrar_popup_salir: bool,
@@ -33,6 +37,12 @@ pub struct MuestraClasificados {
 #[derive(Default)]
 pub struct InicioMundial {
     pub(crate) mostrar_popup_menu: bool,
+}
+
+#[derive(Default)]
+pub struct InfoGrupos {
+    pub(crate) modo: ModoInfoGrupos,
+    pub(crate) idx_grupo: u8
 }
 
 impl VentanaInfo for MenuPrincipal {
@@ -57,4 +67,21 @@ impl VentanaInfo for InicioMundial {
     fn dimensiones(&self) -> Vec2 {
         Vec2::new(900.0, 400.0)
     }
+}
+
+impl VentanaInfo for InfoGrupos {
+    fn dimensiones(&self) -> Vec2 {
+        Vec2::new(1000.0, 500.0)
+    }
+}
+
+/*============================================================================*/
+/*---------------------------------- EXTRAS ----------------------------------*/
+/*============================================================================*/
+
+#[derive(Default)]
+pub enum ModoInfoGrupos {
+    #[default] SoloMostrar,
+    ResultadosParciales(u8),
+    ResultadosFinales
 }

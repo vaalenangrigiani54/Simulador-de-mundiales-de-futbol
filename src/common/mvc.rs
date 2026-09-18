@@ -1,4 +1,5 @@
 use crate::eventos::EventoGlobal;
+use crate::ventanas::{InfoGrupos, InicioMundial, MenuPrincipal, ModoInfoGrupos, MuestraClasificados, SeleccionClasificados};
 use crate::{ModeloSimulador, VentanaInfo};
 use eframe::egui::Ui;
 use std::ops::{Deref, DerefMut};
@@ -25,8 +26,28 @@ pub trait Controlador: VentanaInfo {
 pub struct ControladorObj(Box<dyn Controlador>);
 
 impl ControladorObj {
-    pub fn new<V: Controlador + Ventana + Default + 'static>() -> Self {
-        Self(Box::new(V::default()))
+    fn new<V: Controlador + Ventana + Default + 'static>(ventana: V) -> Self {
+        Self(Box::new(ventana))
+    }
+
+    pub fn new_menu_principal() -> Self {
+        Self::new(MenuPrincipal::default())
+    }
+
+    pub fn new_seleccion_clasificados() -> Self {
+        Self::new(SeleccionClasificados::default())
+    }
+
+    pub fn new_muestra_clasificados() -> Self {
+        Self::new(MuestraClasificados::default())
+    }
+
+    pub fn new_inicio_mundial() -> Self {
+        Self::new(InicioMundial::default())
+    }
+
+    pub fn new_info_grupos(modo: ModoInfoGrupos, idx_grupo: u8) -> Self {
+        Self::new(InfoGrupos { modo, idx_grupo })
     }
 }
 

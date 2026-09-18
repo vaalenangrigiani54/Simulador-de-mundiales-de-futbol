@@ -1,10 +1,9 @@
 use crate::eventos::{EventoGlobal, EventoMuestraClasificados};
 use crate::mvc::{Controlador, Ventana};
-use crate::ventanas::{InicioMundial, MuestraClasificados, SeleccionClasificados};
+use crate::ventanas::MuestraClasificados;
 use crate::{EquipoParticipanteRef, Grupo, ModeloSimulador};
 use eframe::egui;
 use rand::seq::SliceRandom;
-use std::any::TypeId;
 
 const EQUIPOS_POR_GRUPO: usize = 4;
 
@@ -17,12 +16,10 @@ impl Controlador for MuestraClasificados {
             match evento {
                 EventoMuestraClasificados::IrAInicioDelMundial => {
                     modelo.grupos = Some(sortear_grupos(modelo));
-                    return EventoGlobal::CambiarDeVista(TypeId::of::<InicioMundial>());
+                    return EventoGlobal::CambiarDeVistaAInicioMundial
                 }
                 EventoMuestraClasificados::IrAEditarGrupos => todo!(),
-                EventoMuestraClasificados::IrASeleccionarEquiposClasificados => {
-                    return EventoGlobal::CambiarDeVista(TypeId::of::<SeleccionClasificados>());
-                }
+                EventoMuestraClasificados::IrASeleccionarEquiposClasificados => return EventoGlobal::CambiarDeVistaASeleccionClasificados,
             }
         }
 
