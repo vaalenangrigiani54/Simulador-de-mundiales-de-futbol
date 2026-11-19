@@ -45,7 +45,7 @@ impl Ventana for InicioMundial {
 impl InicioMundial {
     fn render_titulo(&self, ui: &mut egui::Ui) {
         let texto = crear_texto(
-            format!("COPA MUNDIAL DE LA FIFA 2026"),
+            "COPA MUNDIAL DE LA FIFA 2026",
             50.0,
             Color32::BLACK,
             true,
@@ -123,11 +123,8 @@ impl InicioMundial {
                 "¿Seguro que desea volver al menú principal?\nSe perderán todos los datos de la simulación actual.",
             )
         {
-            match resultado {
-                ResultadoPopUp::Afirmativo => {
-                    *proximo_evento = Some(EventoInicioMundial::VolverAlMenuPrincipal)
-                }
-                _ => {}
+            if let ResultadoPopUp::Afirmativo = resultado {
+                *proximo_evento = Some(EventoInicioMundial::VolverAlMenuPrincipal);
             }
 
             self.mostrar_popup_menu = false;

@@ -35,7 +35,7 @@ impl ControladorObj {
     }
 
     pub fn new_seleccion_clasificados() -> Self {
-        Self::new(SeleccionClasificados::default())
+        Self::new(SeleccionClasificados)
     }
 
     pub fn new_muestra_clasificados() -> Self {

@@ -123,10 +123,10 @@ impl SeleccionClasificados {
 
         agregar_tabla(ui, &[3, 2, 1], &encabezado, &mut filas, altura_maxima);
 
-        if let Some(evento) = evento_detectado.borrow_mut().take() {
-            if proximo_evento.is_none() {
-                *proximo_evento = Some(evento);
-            }
+        if let Some(evento) = evento_detectado.borrow_mut().take()
+            && proximo_evento.is_none()
+        {
+            *proximo_evento = Some(evento);
         }
     }
 

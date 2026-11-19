@@ -28,7 +28,7 @@ impl SimuladorDePartidos {
     }
 
     pub fn next_gol(&mut self, goles: &mut Vec<Gol>) {
-        if goles.len() as u16 <= MAX_GOLES && self.random.random_bool(PROBABILIDAD_GOL) {
+        if goles.len() < usize::from(MAX_GOLES) && self.random.random_bool(PROBABILIDAD_GOL) {
             if self.random.random_bool(PROBABILIDAD_GOL_PENAL) {
                 goles.push(Gol::de_penal(self.tiempo_actual, self.minuto_actual));
             } else {
@@ -38,19 +38,19 @@ impl SimuladorDePartidos {
     }
 
     pub fn next_amarilla(&mut self, amarillas: &mut u16) {
-        if *amarillas <= MAX_AMARILLAS && self.random.random_bool(PROBABILIDAD_AMARILLA) {
+        if *amarillas < MAX_AMARILLAS && self.random.random_bool(PROBABILIDAD_AMARILLA) {
             *amarillas += 1;
         }
     }
 
     pub fn next_roja(&mut self, rojas: &mut u16) {
-        if *rojas <= MAX_ROJAS && self.random.random_bool(PROBABILIDAD_ROJA) {
+        if *rojas < MAX_ROJAS && self.random.random_bool(PROBABILIDAD_ROJA) {
             *rojas += 1;
         }
     }
 
     pub fn siguiente_minuto(&mut self) -> bool {
-        if self.minuto_actual > self.tiempo_actual.duracion() + 10 {
+        if self.minuto_actual >= self.tiempo_actual.duracion() + 10 {
             return false;
         }
 
@@ -61,5 +61,39 @@ impl SimuladorDePartidos {
     pub fn siguiente_tiempo(&mut self) {
         self.tiempo_actual = self.tiempo_actual.siguiente();
         self.minuto_actual = 0;
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn los_limites_de_eventos_no_se_superan() {
+        let mut simulador = SimuladorDePartidos::inicializar();
+        let mut goles = (0..MAX_GOLES)
+            .map(|_| Gol::normal(TiempoDelPartido::PrimerTiempo, 1))
+            .collect::<Vec<_>>();
+        let mut amarillas = MAX_AMARILLAS;
+        let mut rojas = MAX_ROJAS;
+
+        for _ in 0..100 {
+            simulador.next_gol(&mut goles);
+            simulador.next_amarilla(&mut amarillas);
+            simulador.next_roja(&mut rojas);
+        }
+
+        assert_eq!(goles.len(), usize::from(MAX_GOLES));
+        assert_eq!(amarillas, MAX_AMARILLAS);
+        assert_eq!(rojas, MAX_ROJAS);
+    }
+
+    #[test]
+    fn el_tiempo_no_excede_la_duracion_mas_diez_minutos() {
+        let mut simulador = SimuladorDePartidos::inicializar();
+        for _ in 0..55 {
+            assert!(simulador.siguiente_minuto());
+        }
+        assert!(!simulador.siguiente_minuto());
     }
 }

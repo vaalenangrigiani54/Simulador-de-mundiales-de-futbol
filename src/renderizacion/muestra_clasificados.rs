@@ -1,5 +1,3 @@
-use std::collections::BTreeSet;
-
 use crate::eventos::EventoMuestraClasificados;
 use crate::mvc::Ventana;
 use crate::templates::boton::{
@@ -10,7 +8,8 @@ use crate::templates::popup::{ResultadoPopUp, popup_confirmacion};
 use crate::templates::tabla::{PropiedadesCelda, PropiedadesFila, agregar_tabla};
 use crate::templates::texto::crear_texto;
 use crate::ventanas::MuestraClasificados;
-use crate::{EquipoInfo, EquipoParticipanteRef, ModeloSimulador};
+use crate::modelo::global::EquiposClasificados;
+use crate::{EquipoInfo, ModeloSimulador};
 use eframe::egui::{self, Color32};
 
 const MARGEN_VERTICAL_TABLA: f32 = 25.0;
@@ -57,7 +56,7 @@ impl MuestraClasificados {
     fn render_tabla_clasificados(
         &self,
         ui: &mut egui::Ui,
-        clasificados: &BTreeSet<EquipoParticipanteRef>,
+        clasificados: &EquiposClasificados,
     ) {
         let encabezado = PropiedadesFila {
             datos: vec![
@@ -76,7 +75,7 @@ impl MuestraClasificados {
         };
 
         let mut filas: Vec<PropiedadesFila> = clasificados
-            .iter()
+            .values()
             .map(|equipo| {
                 let equipo = equipo.borrow();
 

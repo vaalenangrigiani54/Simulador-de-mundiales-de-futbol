@@ -129,9 +129,8 @@ impl MenuPrincipal {
                 "¿Está seguro que desea salir?",
             )
         {
-            match respuesta {
-                ResultadoPopUp::Afirmativo => *proximo_evento = Some(EventoMenuPrincipal::Salir),
-                _ => {}
+            if let ResultadoPopUp::Afirmativo = respuesta {
+                *proximo_evento = Some(EventoMenuPrincipal::Salir);
             }
 
             self.mostrar_popup_salir = false;

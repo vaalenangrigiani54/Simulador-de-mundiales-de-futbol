@@ -49,8 +49,9 @@ impl EquipoParticipante {
         self.puntos
     }
 
-    pub fn get_diferencia_goles(&self) -> i16 {
-        (self.goles_a_favor - self.goles_en_contra) as i16
+    /// Diferencia de goles, incluidos los valores negativos.
+    pub fn get_diferencia_goles(&self) -> i32 {
+        i32::from(self.goles_a_favor) - i32::from(self.goles_en_contra)
     }
 
     pub fn get_goles_a_favor(&self) -> u16 {
@@ -150,85 +151,65 @@ impl Display for EquipoParticipante {
 
 impl EquipoInfo for EquipoParticipante {
     fn get_nombre(&self) -> &String {
-        &self.id.get_nombre()
+        self.id.get_nombre()
     }
 
     fn get_codigo(&self) -> &String {
-        &self.id.get_codigo()
+        self.id.get_codigo()
     }
 }
 
 impl Ord for EquipoParticipante {
     fn cmp(&self, other: &Self) -> Ordering {
-        let mut ord = self.puntos.cmp(&other.puntos);
-        if ord.is_ne() {
-            return ord;
-        }
-
-        ord = self
-            .get_diferencia_goles()
-            .cmp(&other.get_diferencia_goles());
-        if ord.is_ne() {
-            return ord;
-        }
-
-        ord = self.goles_a_favor.cmp(&other.goles_a_favor);
-        if ord.is_ne() {
-            return ord;
-        }
-
-        ord = other.goles_en_contra.cmp(&self.goles_en_contra);
-        if ord.is_ne() {
-            return ord;
-        }
-
-        ord = self.goles_a_favor.cmp(&other.goles_a_favor);
-        if ord.is_ne() {
-            return ord;
-        }
-
-        ord = other.goles_en_contra.cmp(&self.goles_en_contra);
-        if ord.is_ne() {
-            return ord;
-        }
-
-        ord = self.ganados.cmp(&other.ganados);
-        if ord.is_ne() {
-            return ord;
-        }
-
-        ord = self.empatados.cmp(&other.empatados);
-        if ord.is_ne() {
-            return ord;
-        }
-
-        ord = other.perdidos.cmp(&self.perdidos);
-        if ord.is_ne() {
-            return ord;
-        }
-
-        ord = other.amarillas.cmp(&self.amarillas);
-        if ord.is_ne() {
-            return ord;
-        }
-
-        ord = other.rojas.cmp(&self.rojas);
-        if ord.is_ne() {
-            return ord;
-        }
-
-        other.id.cmp(&self.id).reverse()
+        self.puntos
+            .cmp(&other.puntos)
+            .then_with(|| self.get_diferencia_goles().cmp(&other.get_diferencia_goles()))
+            .then_with(|| self.goles_a_favor.cmp(&other.goles_a_favor))
+            .then_with(|| other.goles_en_contra.cmp(&self.goles_en_contra))
+            .then_with(|| self.ganados.cmp(&other.ganados))
+            .then_with(|| other.empatados.cmp(&self.empatados))
+            .then_with(|| other.perdidos.cmp(&self.perdidos))
+            .then_with(|| other.amarillas.cmp(&self.amarillas))
+            .then_with(|| other.rojas.cmp(&self.rojas))
+            .then_with(|| self.id.cmp(&other.id))
     }
 }
 
 impl PartialEq for EquipoParticipante {
     fn eq(&self, other: &Self) -> bool {
-        self.id == other.id
+        self.cmp(other).is_eq()
     }
 }
 
 impl PartialOrd for EquipoParticipante {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.cmp(other))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn diferencia_de_goles_admite_valores_negativos_y_extremos() {
+        let mut equipo = EquipoParticipante::new(Equipo::new("Argentina", "ARG"));
+        equipo.sumar_goles_en_contra(3, true);
+        assert_eq!(equipo.get_diferencia_goles(), -3);
+        equipo.sumar_goles_a_favor(u16::MAX, true);
+        assert_eq!(equipo.get_diferencia_goles(), i32::from(u16::MAX) - 3);
+    }
+
+    #[test]
+    fn orden_y_igualdad_son_consistentes() {
+        let identidad = Equipo::new("Argentina", "ARG");
+        let mut primero = EquipoParticipante::new(identidad.clone());
+        let segundo = EquipoParticipante::new(identidad);
+        assert!(primero == segundo);
+        assert!(primero.cmp(&segundo).is_eq());
+
+        primero.sumar_partido_ganado(true);
+        assert!(primero != segundo);
+        assert!(primero > segundo);
     }
 }

@@ -58,21 +58,21 @@ pub fn popup_confirmacion(ctx: &Context, titulo: &str, mensaje: &str) -> Option<
                 // Bisel superior/izquierdo (Luz)
                 painter.line_segment(
                     [rect.left_bottom(), rect.left_top()],
-                    Stroke::new(1.5, Color32::from_white_alpha(50)),
+                    Stroke::new(1.5_f32, Color32::from_white_alpha(50)),
                 );
                 painter.line_segment(
                     [rect.left_top(), rect.right_top()],
-                    Stroke::new(1.5, Color32::from_white_alpha(50)),
+                    Stroke::new(1.5_f32, Color32::from_white_alpha(50)),
                 );
 
                 // Bisel inferior/derecho (Sombra)
                 painter.line_segment(
                     [rect.right_top(), rect.right_bottom()],
-                    Stroke::new(1.5, Color32::from_black_alpha(160)),
+                    Stroke::new(1.5_f32, Color32::from_black_alpha(160)),
                 );
                 painter.line_segment(
                     [rect.right_bottom(), rect.left_bottom()],
-                    Stroke::new(1.5, Color32::from_black_alpha(160)),
+                    Stroke::new(1.5_f32, Color32::from_black_alpha(160)),
                 );
 
                 // Contenido del popup

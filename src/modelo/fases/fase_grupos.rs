@@ -29,47 +29,37 @@ impl Fase for FaseDeGrupos {
     }
 
     fn siguiente_partido(&mut self) -> bool {
-        if let Some((mut idx_grupo, mut idx_partido)) = self.partido_actual {
-            let Some(partidos_grupo_actual) = self.partidos.get(idx_grupo) else {
-                return false;
-            };
-
-            idx_partido += 1;
-            if idx_partido >= partidos_grupo_actual.len() {
-                idx_grupo += 1;
-                idx_partido = 0;
+        let siguiente = match self.partido_actual {
+            None => (0, 0),
+            Some((grupo, partido)) if partido + 1 < self.partidos[grupo].len() => {
+                (grupo, partido + 1)
             }
+            Some((grupo, _)) => (grupo + 1, 0),
+        };
 
-            self.partido_actual = Some((idx_grupo, idx_partido));
-            if idx_grupo >= self.partidos.len() {
-                return false;
-            }
-        } else {
-            self.partido_actual = Some((0, 0));
-        }
+        let Some(partidos_grupo) = self.partidos.get_mut(siguiente.0) else {
+            return false;
+        };
+        let Some(partido) = partidos_grupo.get_mut(siguiente.1) else {
+            return false;
+        };
 
-        let (idx_grupo, idx_partido) = self.partido_actual.unwrap_or_default();
-        let partido = &mut self.partidos[idx_grupo][idx_partido];
+        self.partido_actual = Some(siguiente);
         partido.simular();
-
         true
     }
 
     fn partido_anterior(&mut self) -> bool {
-        if let Some((mut idx_grupo, mut idx_partido)) = self.partido_actual {
-            if idx_partido == 0 {
-                if idx_grupo == 0 {
-                    self.partido_actual = None;
-                    return false;
-                }
+        let Some((grupo, partido)) = self.partido_actual else {
+            return false;
+        };
 
-                idx_grupo -= 1;
-            } else {
-                idx_partido -= 1;
-            }
-
-            self.partido_actual = Some((idx_grupo, idx_partido));
+        if partido > 0 {
+            self.partido_actual = Some((grupo, partido - 1));
+        } else if grupo > 0 {
+            self.partido_actual = Some((grupo - 1, self.partidos[grupo - 1].len() - 1));
         } else {
+            self.partido_actual = None;
             return false;
         }
 
@@ -203,7 +193,7 @@ mod test {
             EquipoParticipanteRef::from(psg),
         ];
 
-        let orden_esperado = vec![
+        let orden_esperado = [
             (cod_madrid, cod_barcelona),
             (cod_bayern, cod_psg),
             (cod_bayern, cod_madrid),
@@ -243,5 +233,44 @@ mod test {
                 "El equipo visitante de este partido debe ser '{cod_vis_esperado}'"
             );
         }
+    }
+}
+
+#[cfg(test)]
+mod regresion {
+    use super::*;
+    use crate::Equipo;
+
+    fn grupo(id: u8) -> Grupo {
+        let equipos = (0..4)
+            .map(|n| EquipoParticipanteRef::from(Equipo::new(
+                format!("Equipo {id}-{n}"), format!("E{id}{n}"),
+            )))
+            .collect();
+        Grupo::try_new(id, equipos).unwrap()
+    }
+
+    #[test]
+    fn retroceder_de_grupo_vuelve_al_ultimo_partido_anterior() {
+        let mut fase = FaseDeGrupos::new(&vec![grupo(0), grupo(1)]);
+        for _ in 0..7 {
+            assert!(fase.siguiente_partido());
+        }
+        assert_eq!(fase.get_idx_partido_actual(), (1, 0));
+        assert!(fase.partido_anterior());
+        assert_eq!(fase.get_idx_partido_actual(), (0, 5));
+    }
+
+    #[test]
+    fn terminar_la_fase_no_deja_un_indice_invalido() {
+        let mut fase = FaseDeGrupos::new(&vec![grupo(0)]);
+        for _ in 0..6 {
+            assert!(fase.siguiente_partido());
+        }
+        assert!(!fase.siguiente_partido());
+        assert!(!fase.siguiente_partido());
+        assert_eq!(fase.get_idx_partido_actual(), (0, 5));
+        assert!(fase.partido_anterior());
+        assert_eq!(fase.get_idx_partido_actual(), (0, 4));
     }
 }

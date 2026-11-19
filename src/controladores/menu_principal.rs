@@ -1,11 +1,10 @@
 use crate::eventos::{EventoGlobal, EventoMenuPrincipal};
 use crate::mvc::{Controlador, Ventana};
-use crate::ventanas::{MenuPrincipal, MuestraClasificados, SeleccionClasificados};
+use crate::ventanas::MenuPrincipal;
 use crate::{Equipo, EquipoParticipanteRef, ModeloSimulador};
 use eframe::egui;
 use rand::seq::SliceRandom;
-use std::any::TypeId;
-use std::collections::BTreeSet;
+use crate::modelo::global::EquiposClasificados;
 
 impl Controlador for MenuPrincipal {
     fn actualizar(&mut self, ui: &mut egui::Ui, modelo: &mut ModeloSimulador) -> EventoGlobal {
@@ -39,8 +38,8 @@ impl Controlador for MenuPrincipal {
 
 fn elegir_clasificados_aleatoriamente(
     cantidad: usize,
-    afiliados_fifa: &Vec<Equipo>,
-) -> BTreeSet<EquipoParticipanteRef> {
+    afiliados_fifa: &[Equipo],
+) -> EquiposClasificados {
     let mut rng = rand::rng();
     let mut pool: Vec<usize> = (0..afiliados_fifa.len()).collect();
 
@@ -48,7 +47,10 @@ fn elegir_clasificados_aleatoriamente(
     pool.truncate(cantidad);
 
     pool.into_iter()
-        .map(|idx| EquipoParticipanteRef::from(afiliados_fifa[idx].clone()))
+        .map(|idx| {
+            let equipo = afiliados_fifa[idx].clone();
+            (equipo.clone(), EquipoParticipanteRef::from(equipo))
+        })
         .collect()
 }
 
@@ -65,8 +67,9 @@ mod test {
         let clasificados = elegir_clasificados_aleatoriamente(cantidad, afiliados_fifa);
 
         println!("{cantidad} CLASIFICADOS:");
-        for equipo in clasificados {
-            println!("{}", equipo.borrow())
+        assert_eq!(clasificados.len(), cantidad);
+        for (_, equipo) in clasificados {
+            println!("{}", equipo.borrow());
         }
     }
 }

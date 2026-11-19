@@ -35,7 +35,7 @@ fn sortear_grupos(modelo: &ModeloSimulador) -> Vec<Grupo> {
 
     let mut rng = rand::rng();
     let mut equipos: Vec<EquipoParticipanteRef> =
-        equipos.iter().map(|equipo| equipo.clone()).collect();
+        equipos.values().cloned().collect();
     equipos.shuffle(&mut rng);
 
     let mut grupos = Vec::with_capacity(equipos.len() / EQUIPOS_POR_GRUPO);

@@ -1,5 +1,6 @@
 use std::{
     cell::Ref,
+    cmp::Ordering,
     fmt::{Debug, Display},
 };
 
@@ -116,19 +117,25 @@ impl Partido {
         let mut local = self.local.borrow_mut();
         let mut visitante = self.visitante.borrow_mut();
 
-        match self.get_ganador_perdedor() {
-            Some((ganador, perdedor)) => {
-                ganador.borrow_mut().sumar_partido_ganado(avanzar);
-                perdedor.borrow_mut().sumar_partido_perdido(avanzar);
+        let cant_goles_local = self.goles_local.len();
+        let cant_goles_visitante = self.goles_visitante.len();
+
+        // Usar los préstamos ya existentes evita un segundo borrow_mut sobre
+        // los mismos RefCell cuando el resultado no es un empate.
+        match cant_goles_local.cmp(&cant_goles_visitante) {
+            Ordering::Greater => {
+                local.sumar_partido_ganado(avanzar);
+                visitante.sumar_partido_perdido(avanzar);
             }
-            None => {
+            Ordering::Less => {
+                visitante.sumar_partido_ganado(avanzar);
+                local.sumar_partido_perdido(avanzar);
+            }
+            Ordering::Equal => {
                 local.sumar_partido_empatado(avanzar);
                 visitante.sumar_partido_empatado(avanzar);
             }
         }
-
-        let cant_goles_local = self.goles_local.len();
-        let cant_goles_visitante = self.goles_visitante.len();
 
         local.sumar_goles_a_favor(cant_goles_local as u16, avanzar);
         local.sumar_goles_en_contra(cant_goles_visitante as u16, avanzar);
@@ -194,5 +201,38 @@ mod test {
         partido.simular();
 
         println!("{:?}", partido);
+    }
+}
+
+#[cfg(test)]
+mod regresion {
+    use super::*;
+    use crate::{Equipo, TiempoDelPartido};
+
+    #[test]
+    fn aplicar_y_revertir_resultados_no_produce_prestamos_duplicados() {
+        let local = EquipoParticipanteRef::from(Equipo::new("Argentina", "ARG"));
+        let visitante = EquipoParticipanteRef::from(Equipo::new("Francia", "FRA"));
+        let mut partido = Partido::new(local.clone(), visitante.clone());
+        partido.goles_local = vec![
+            Gol::normal(TiempoDelPartido::PrimerTiempo, 12),
+            Gol::normal(TiempoDelPartido::SegundoTiempo, 18),
+        ];
+        partido.goles_visitante = vec![Gol::normal(TiempoDelPartido::SegundoTiempo, 30)];
+        partido.amarillas_local = 2;
+
+        partido.avanzar_resultados_a_equipos();
+        assert_eq!(local.borrow().get_puntos(), 3);
+        assert_eq!(local.borrow().get_diferencia_goles(), 1);
+        assert_eq!(visitante.borrow().get_diferencia_goles(), -1);
+        assert_eq!(local.borrow().get_tarjetas_amarillas(), 2);
+        assert_eq!(visitante.borrow().get_partidos_perdidos(), 1);
+
+        partido.retroceder_resultados_a_equipos();
+        assert_eq!(local.borrow().get_puntos(), 0);
+        assert_eq!(local.borrow().get_diferencia_goles(), 0);
+        assert_eq!(visitante.borrow().get_diferencia_goles(), 0);
+        assert_eq!(local.borrow().get_tarjetas_amarillas(), 0);
+        assert_eq!(visitante.borrow().get_partidos_perdidos(), 0);
     }
 }

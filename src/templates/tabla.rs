@@ -21,7 +21,7 @@ pub fn agregar_tabla(
     ui: &mut egui::Ui,
     pesos_columnas: &[u32],
     encabezados: &PropiedadesFila,
-    filas: &mut Vec<PropiedadesFila>,
+    filas: &mut [PropiedadesFila],
     altura_maxima: f32,
 ) {
     let num_columnas = pesos_columnas.len();
@@ -31,8 +31,8 @@ pub fn agregar_tabla(
 
     // Estilos de líneas adaptados al tema.
     let color_lineas = ui.visuals().widgets.noninteractive.bg_stroke.color;
-    let stroke_borde_exterior = Stroke::new(3.0, color_lineas);
-    let stroke_grid_interna = Stroke::new(1.0, color_lineas.linear_multiply(0.6));
+    let stroke_borde_exterior = Stroke::new(3.0_f32, color_lineas);
+    let stroke_grid_interna = Stroke::new(1.0_f32, color_lineas.linear_multiply(0.6));
 
     // Renderizar tabla dentro de un scroll area con altura limitada
     let punto_inicio_y = ui.cursor().top();
@@ -59,7 +59,7 @@ fn renderizar_tabla_interna(
     ui: &mut egui::Ui,
     pesos: &[u32],
     encabezados: &PropiedadesFila,
-    filas: &mut Vec<PropiedadesFila>,
+    filas: &mut [PropiedadesFila],
     num_columnas: usize,
     stroke_grid_interna: Stroke,
 ) {
@@ -146,7 +146,7 @@ fn renderizar_encabezado(
 /// Procesa las filas con alturas variables y renderiza el contenido dinámico de cada celda.
 fn renderizar_cuerpo(
     body: egui_extras::TableBody<'_>,
-    filas: &mut Vec<PropiedadesFila>,
+    filas: &mut [PropiedadesFila],
     num_columnas: usize,
     stroke_grid: Stroke,
 ) {

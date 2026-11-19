@@ -1,24 +1,18 @@
 use crate::EquipoParticipanteRef;
 
 pub struct Grupo {
-    id: usize,
+    id: u8,
     equipos: Vec<(usize, EquipoParticipanteRef)>,
 }
 
 impl Grupo {
-    pub fn try_new(id: usize, equipos: Vec<EquipoParticipanteRef>) -> Result<Self, String> {
+    pub fn try_new(id: u8, equipos: Vec<EquipoParticipanteRef>) -> Result<Self, String> {
         let num_equipos = equipos.len();
         if num_equipos < 3 {
             return Err("El grupo debe tener al menos 3 participantes".to_string());
         }
 
-        let mut bombo = 1;
-        let mut equipos_bombo = Vec::with_capacity(num_equipos);
-
-        for equipo in equipos {
-            equipos_bombo.push((bombo, equipo));
-            bombo += 1;
-        }
+        let equipos_bombo = (1..).zip(equipos).collect();
 
         Ok(Self {
             id,
@@ -26,7 +20,7 @@ impl Grupo {
         })
     }
 
-    pub fn get_id(&self) -> usize {
+    pub fn get_id(&self) -> u8 {
         self.id
     }
 

@@ -8,20 +8,16 @@ use eframe::egui::{self, Color32};
 impl Ventana for InfoGrupos {
     type Evento = EventoInfoGrupos;
 
-    fn renderizar(&mut self, ui: &mut egui::Ui, global: &ModeloSimulador) -> Option<Self::Evento> {
-        let mut proximo_evento = None;
-        let (
-            titulo,
-            texto_boton_atras
-        ) = match self.modo {
-            ModoInfoGrupos::SoloMostrar => ("Grupo A", "Anterior"),
+    fn renderizar(&mut self, ui: &mut egui::Ui, _global: &ModeloSimulador) -> Option<Self::Evento> {
+        let letra_grupo = char::from(b'A' + self.idx_grupo);
+        let titulo = match self.modo {
+            ModoInfoGrupos::SoloMostrar => format!("Grupo {letra_grupo}"),
             ModoInfoGrupos::ResultadosParciales(_) => todo!(),
-            ModoInfoGrupos::ResultadosFinales => ("Resultados del Grupo A", "Anterior"),
+            ModoInfoGrupos::ResultadosFinales => format!("Resultados del Grupo {letra_grupo}"),
         };
-        
-        Self::render_titulo(ui, titulo);
-        
-        proximo_evento
+
+        Self::render_titulo(ui, &titulo);
+        None
     }
 }
 

@@ -1,5 +1,8 @@
 use crate::{Equipo, EquipoParticipanteRef, Grupo, Mundial};
-use std::{collections::BTreeSet, fs::File, io::{BufRead, BufReader}};
+use std::{collections::BTreeMap, fs::File, io::{BufRead, BufReader}};
+
+/// Selecciones identificadas por un equipo inmutable, con estadísticas compartidas.
+pub type EquiposClasificados = BTreeMap<Equipo, EquipoParticipanteRef>;
 
 /// Estructura principal del modelo global.
 #[derive(Default)]
@@ -11,7 +14,7 @@ pub struct ModeloSimulador {
     pub cant_participantes: usize,
 
     /// Campo auxiliar para los equipos clasificados.
-    pub clasificados: Option<BTreeSet<EquipoParticipanteRef>>,
+    pub clasificados: Option<EquiposClasificados>,
 
     /// Campo auxiliar para los grupos.
     pub grupos: Option<Vec<Grupo>>,
@@ -35,25 +38,19 @@ impl ModeloSimulador {
 
     /// Devuelve todos los equipos afiliados a la FIFA.
     pub fn get_equipos_disponibles(&self) -> &Vec<Equipo> {
-        return &self.afiliados_fifa;
+        &self.afiliados_fifa
     }
 
     /// Devuelve la cantidad actual de equipos clasificados
     pub fn cantidad_clasificados(&self) -> usize {
-        if let Some(clasificados) = &self.clasificados {
-            clasificados.len()
-        } else {
-            0
-        }
+        self.clasificados.as_ref().map_or(0, BTreeMap::len)
     }
 
     /// Devuelve `true` si el equipo está clasificado. Caso contrario `false`.
     pub fn esta_clasificado(&self, equipo: &Equipo) -> bool {
-        if let Some(clasificados) = &self.clasificados {
-            clasificados.contains(&EquipoParticipanteRef::from(equipo.clone()))
-        } else {
-            false
-        }
+        self.clasificados
+            .as_ref()
+            .is_some_and(|clasificados| clasificados.contains_key(equipo))
     }
 }
 
@@ -72,4 +69,30 @@ fn inicializar_afiliados_fifa() -> Result<Vec<Equipo>, String> {
     }
 
     Ok(equipos)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn clasificacion_permanece_estable_al_cambiar_estadisticas() {
+        let identidad = Equipo::new("Argentina", "ARG");
+        let participante = EquipoParticipanteRef::from(identidad.clone());
+        let mut modelo = ModeloSimulador {
+            clasificados: Some(BTreeMap::from([(identidad.clone(), participante.clone())])),
+            ..Default::default()
+        };
+
+        participante.borrow_mut().sumar_partido_ganado(true);
+        assert!(modelo.esta_clasificado(&identidad));
+        assert_eq!(modelo.cantidad_clasificados(), 1);
+        assert!(modelo
+            .clasificados
+            .as_mut()
+            .unwrap()
+            .remove(&identidad)
+            .is_some());
+        assert!(!modelo.esta_clasificado(&identidad));
+    }
 }

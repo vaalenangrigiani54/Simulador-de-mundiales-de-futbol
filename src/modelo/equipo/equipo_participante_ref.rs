@@ -7,7 +7,7 @@ use std::{
 use crate::{Equipo, EquipoParticipante};
 
 /// Múltiples referencias mutables a un equipo participante.
-#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone)]
 pub struct EquipoParticipanteRef(Rc<RefCell<EquipoParticipante>>);
 
 impl From<Equipo> for EquipoParticipanteRef {
